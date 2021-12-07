@@ -14,5 +14,7 @@ public class Controleur {
 
     // affiche Etat de gala et son contenu
 
-
+    /*public boolean identification(Individu pers) {
+        int identite=ihm.
+    }*/
 }
