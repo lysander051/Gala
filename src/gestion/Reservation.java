@@ -15,5 +15,4 @@ public class Reservation {
         this.montant = montant;
     }
 
-
 }
