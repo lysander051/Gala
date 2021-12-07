@@ -11,13 +11,12 @@ public  abstract class Individu implements Comparable<Individu>{
     private Reservation reservation;
 
 
-    public Individu(String nom, String prenom, String numTel, String eMail, int identifiant, Reservation reservation) {
+    public Individu(int identifiant,String nom, String prenom, String numTel, String eMail) {
         this.nom = nom;
         this.prenom = prenom;
         this.numTel = numTel;
         this.eMail = eMail;
         this.identifiant = identifiant;
-        this.reservation = reservation;
     }
 
     @Override

@@ -1,18 +1,81 @@
 package gestion;
 
-import java.util.PriorityQueue;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.util.*;
 
 public class Gala {
-    private SortedSet<Etudiant> etudiant = new TreeSet<>();
-    private SortedSet<Personnel> personnel = new TreeSet<>();
+    private final int TARIF1 = 10;
+    private final int TARIF2 = 15;
+    private final int TARIF3 = 20;
+    private final int TABLE_ETUDIANT = 15;
+    private final int TABLE_PERSONNEL = 10;
 
+    private SortedMap<Integer, Etudiant> etudiantsListe = new TreeMap<>();
+    private SortedMap<Integer, Personnel> personnelsListe = new TreeMap<>();
+    private SortedSet<Etudiant> etudiantInscrit = new TreeSet<>();
+    private SortedSet<Personnel>personnelInscrit = new TreeSet<>();
     private PriorityQueue<Etudiant> listeAttente = new PriorityQueue<>();
+    private SortedSet<Personnel> etudiantAccepte = new TreeSet<>();
+    private SortedSet<Table> etudiantTable = new TreeSet<>();
+    private SortedSet<Table> personnelTable = new TreeSet<>();
 
-    private SortedSet<Etudiant> etudiantAccepte = new TreeSet<>();
-    private SortedSet<Personnel> personnelInscrit = new TreeSet<>();
+    private LocalDate dateGala;
 
-    private SortedSet<Table> table = new TreeSet<>();
+    public Gala(LocalDate date){
+        dateGala = date;
+        File etudiant = new File("data/etudiants.txt");
+        File personnel = new File("data/personnel.txt");
+
+        //creation des listes initiales pour les etudiants et le personnel
+        try {
+            Scanner scEtudiant = new Scanner(etudiant);
+            Scanner scPersonnel = new Scanner(personnel);
+
+            //creation liste etudiant
+            while (scEtudiant.hasNextLine()) {
+                int num = Integer.parseInt(scEtudiant.next());
+                String nom = scEtudiant.next();
+                String prenom = scEtudiant.next();
+                String telephone = scEtudiant.next();
+                String email = scEtudiant.next();
+                int annee = Integer.parseInt(scEtudiant.next());
+
+                etudiantsListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
+            }
+            scEtudiant.close();
+
+            //creation liste personnel
+            while (scPersonnel.hasNextLine()) {
+                int num = Integer.parseInt(scPersonnel.next());
+                String nom = scPersonnel.next();
+                String prenom = scPersonnel.next();
+                String telephone = scPersonnel.next();
+                String email = scPersonnel.next();
+
+                personnelsListe.put(num, new Personnel(num, nom, prenom, telephone, email));
+            }
+            scPersonnel.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        //creation des table du personnel et des etudiant
+        for (int i = 0; i < TABLE_PERSONNEL; i++) {
+            personnelTable.add(new Table());
+        }
+        for (int i = 0; i < TABLE_ETUDIANT; i++) {
+            personnelTable.add(new Table());
+        }
+    }
+
+    public boolean isPresent(int type, int id){
+        return switch (type) {
+            case 0 -> personnelsListe.containsKey(id);
+            case 1 -> etudiantsListe.containsKey(id);
+            default -> throw new NumberFormatException();
+        };
+    }
 }
