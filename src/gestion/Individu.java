@@ -38,4 +38,9 @@ public  abstract class Individu implements Comparable<Individu>{
         return this.identifiant-o.identifiant;
     }
 
+    public abstract int getType();
+
+    public int getIdentifiant() {
+        return identifiant;
+    }
 }

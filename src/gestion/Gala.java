@@ -71,26 +71,26 @@ public class Gala {
         }
     }
 
-    public boolean estPresent(int type, int id){
-        return switch (type) {
+    public boolean estPresent(int id){
+        return switch (personnelListe.get(id).getType()) {
             case 0 -> personnelListe.containsKey(id);
             case 1 -> etudiantListe.containsKey(id);
             default -> throw new NumberFormatException();
         };
     }
 
-    public boolean inscription(int type, int id){
+    public boolean inscription(int id){
         //TODO verifier si le get ne retourne rien, si cela fonctionne
-        switch (type) {
+        switch (personnelListe.get(id).getType()) {
             case 0 -> {
-                if(estPresent(type, id)) {
+                if(estPresent(id)) {
                     personnelInscrit.put(id, personnelListe.get(id));
                     return true;
                 }
                 else {return false;}
             }
             case 1 -> {
-                if(estPresent(type, id)){
+                if(estPresent(id)){
                     etudiantInscrit.put(id, etudiantInscrit.get(id));
                     return true;
                 }
@@ -100,8 +100,8 @@ public class Gala {
         }
     }
 
-    public boolean estInscrit(int type, int id){
-        return switch (type) {
+    public boolean estInscrit(int id){
+        return switch (personnelListe.get(id).getType()) {
             case 0 -> personnelInscrit.containsKey(id);
             case 1 -> etudiantInscrit.containsKey(id);
             default -> throw new NumberFormatException();
