@@ -79,13 +79,25 @@ public class Gala {
         };
     }
 
-    public void inscription(int type, int id){
+    public boolean inscription(int type, int id){
         //TODO verifier si le get ne retourne rien, si cela fonctionne
         switch (type) {
-            case 0 -> personnelInscrit.put(id, personnelListe.get(id));
-            case 1 -> etudiantInscrit.put(id, etudiantInscrit.get(id));
+            case 0 -> {
+                if(estPresent(type, id)) {
+                    personnelInscrit.put(id, personnelListe.get(id));
+                    return true;
+                }
+                else {return false;}
+            }
+            case 1 -> {
+                if(estPresent(type, id)){
+                    etudiantInscrit.put(id, etudiantInscrit.get(id));
+                    return true;
+                }
+                else {return false;}
+            }
             default -> throw new NumberFormatException();
-        };
+        }
     }
 
     public boolean estInscrit(int type, int id){
