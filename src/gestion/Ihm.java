@@ -22,5 +22,21 @@ public class Ihm {
         return id;
     }
 
+    public int demanderNumero(){
+        int numero = 0;
+        while (identite.hasNext()){
+            System.out.println("Entrez votre id personnel ou votre numéro étudiant: ");
+            numero = identite.nextInt();
+            if ( Integer.toString(numero).length() == 7 || Integer.toString(numero).length() == 4){
+                return numero;
+            }
+            else {
+                System.out.println("Veuillez entrer un identifiant valide");
+            }
+        }
+        return numero;
+    }
+
+
 
 }
