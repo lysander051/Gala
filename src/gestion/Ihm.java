@@ -30,13 +30,24 @@ public class Ihm {
             if ( Integer.toString(numero).length() == 7 || Integer.toString(numero).length() == 4){
                 return numero;
             }
-            else {
-                System.out.println("Veuillez entrer un identifiant valide");
-            }
         }
         return numero;
     }
 
+    public int InscrireOuQuitter(){
+        int continuer = 0;
+        while (identite.hasNext()){
+            System.out.println("Souhaitez-vous vous inscrire (1) ou quitter l'inscription (0)?");
+            continuer = identite.nextInt();
+            if (continuer == 1){
+                return 1;
+            }
+            else if (continuer == 0){
+                return 0;
+            }
+        }
+        return continuer;
+    }
 
 
 }
