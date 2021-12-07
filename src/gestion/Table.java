@@ -10,4 +10,11 @@ public class Table {
     private int numTable;
     private int placePrise;
 
+    Set<Individu> participants = new HashSet<>();
+
+    public Table(){
+        numTable=++id;
+    }
+
+
 }
