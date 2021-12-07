@@ -3,8 +3,8 @@ package gestion;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Table implements Comparable{
-    private final int placeParTable = 8;
+public class Table implements Comparable<Table>{
+    private final int PLACE_PAR_TABLE = 8;
 
     private static int id;
     private int numTable;
@@ -18,8 +18,7 @@ public class Table implements Comparable{
     }
 
     @Override
-    public int compareTo(Object o) {
-        Table t = (Table)o;
+    public int compareTo(Table t) {
         return numTable-t.numTable;
     }
 }
