@@ -3,7 +3,13 @@ package gestion;
 import java.util.Scanner;
 
 public class Ihm {
-    Scanner identite = new Scanner(System.in);
+    Scanner identite = new Scanner(System.in); //scanner utiliser dans toute la classe
+
+    /**
+     * DemandeIdentite()
+     * Cette méthode permet de demander si la personne est un étudiant ou un membre du personnel
+     * @return 0, 1, 2 en fonction de si la personne est un étudiant ou un personnel
+     */
 
     public int demandeIdentite() {
         int id = -1;
@@ -14,40 +20,76 @@ public class Ihm {
                 return 0;
             } else if (id == 1) {
                 return 1;
-            }
-            else if (id == 2){
+            } else if (id == 2) {
                 break;
             }
         }
         return id;
     }
 
-    public int demanderNumero(){
+    /**
+     * méthode demanderNumero()
+     * Cette méthode permet de récupérer le numéro étudiant ou du personnel qui réalise l'inscription
+     * @return numero pour comparer avec la liste des Individus pouvant s'inscrire
+     */
+
+    public int demanderNumero() {
         int numero = 0;
-        while (identite.hasNext()){
+        while (identite.hasNext()) {
             System.out.println("Entrez votre id personnel ou votre numéro étudiant: ");
             numero = identite.nextInt();
-            if ( Integer.toString(numero).length() == 7 || Integer.toString(numero).length() == 4){
+            if (Integer.toString(numero).length() == 7 || Integer.toString(numero).length() == 4) {
                 return numero;
             }
         }
         return numero;
     }
 
-    public int InscrireOuQuitter(){
+    /**
+     * méthode InscrireOuQuitter()
+     * Cette méthode permet de s'inscrire ou d'abandonner l'inscription
+     * @return 1 ou 2 en fonction de si l'utilisateur veut s'inscrire ou non
+     */
+
+    public int InscrireOuQuitter() {
         int continuer = 0;
-        while (identite.hasNext()){
+        while (identite.hasNext()) {
             System.out.println("Souhaitez-vous vous inscrire (1) ou quitter l'inscription (0)?");
             continuer = identite.nextInt();
-            if (continuer == 1){
+            if (continuer == 1) {
                 return 1;
-            }
-            else if (continuer == 0){
+            } else if (continuer == 0) {
                 return 0;
             }
         }
         return continuer;
     }
 
+    /**
+     * méthode afficherMenu()
+     * Cette méthode permet d'afficher les places du diner, se désinscrire ou quitter
+     * @return 0 pour afficher les places du diner, 1 pour se désinscrire avec confirmation et 2 pour quitter
+     */
 
+    public int afficherMenu() {
+        int menu = -1;
+        Scanner sc = new Scanner(System.in);
+        while (identite.hasNext()) {
+            menu = identite.nextInt();
+            if (menu == 0) {
+                return 0;
+            } else if (menu == 1) {
+                if (sc.hasNext()) {
+                    System.out.println("Etes-vous sur de vous désinscrire (oui / non?");
+                    String validationDesinscription = sc.next();
+                    if (validationDesinscription == "oui") {
+                        return 1;
+                    }
+                }
+            } else if (menu == 2) {
+                return 2;
+            }
+        }
+        return menu;
+    }
 }
