@@ -12,10 +12,10 @@ public class Gala {
     private final int TABLE_ETUDIANT = 15;
     private final int TABLE_PERSONNEL = 10;
 
-    private SortedMap<Integer, Etudiant> etudiantsListe = new TreeMap<>();
-    private SortedMap<Integer, Personnel> personnelsListe = new TreeMap<>();
-    private SortedSet<Etudiant> etudiantInscrit = new TreeSet<>();
-    private SortedSet<Personnel>personnelInscrit = new TreeSet<>();
+    private SortedMap<Integer, Etudiant> etudiantListe = new TreeMap<>();
+    private SortedMap<Integer, Personnel> personnelListe = new TreeMap<>();
+    private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
+    private SortedMap<Integer, Personnel>personnelInscrit = new TreeMap<>();
     private PriorityQueue<Etudiant> listeAttente = new PriorityQueue<>();
     private SortedSet<Personnel> etudiantAccepte = new TreeSet<>();
     private SortedSet<Table> etudiantTable = new TreeSet<>();
@@ -42,7 +42,7 @@ public class Gala {
                 String email = scEtudiant.next();
                 int annee = Integer.parseInt(scEtudiant.next());
 
-                etudiantsListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
+                etudiantListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
             }
             scEtudiant.close();
 
@@ -54,7 +54,7 @@ public class Gala {
                 String telephone = scPersonnel.next();
                 String email = scPersonnel.next();
 
-                personnelsListe.put(num, new Personnel(num, nom, prenom, telephone, email));
+                personnelListe.put(num, new Personnel(num, nom, prenom, telephone, email));
             }
             scPersonnel.close();
         }
@@ -71,10 +71,27 @@ public class Gala {
         }
     }
 
-    public boolean isPresent(int type, int id){
+    public boolean estPresent(int type, int id){
         return switch (type) {
-            case 0 -> personnelsListe.containsKey(id);
-            case 1 -> etudiantsListe.containsKey(id);
+            case 0 -> personnelListe.containsKey(id);
+            case 1 -> etudiantListe.containsKey(id);
+            default -> throw new NumberFormatException();
+        };
+    }
+
+    public void inscription(int type, int id){
+        //TODO verifier si le get ne retourne rien, si cela fonctionne
+        switch (type) {
+            case 0 -> personnelInscrit.put(id, personnelListe.get(id));
+            case 1 -> etudiantInscrit.put(id, etudiantInscrit.get(id));
+            default -> throw new NumberFormatException();
+        };
+    }
+
+    public boolean estInscrit(int type, int id){
+        return switch (type) {
+            case 0 -> personnelInscrit.containsKey(id);
+            case 1 -> etudiantInscrit.containsKey(id);
             default -> throw new NumberFormatException();
         };
     }
