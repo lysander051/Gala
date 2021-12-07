@@ -3,6 +3,7 @@ package gestion;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Gala {
@@ -12,18 +13,17 @@ public class Gala {
     private final int TABLE_ETUDIANT = 15;
     private final int TABLE_PERSONNEL = 10;
 
-    private SortedMap<Integer, Etudiant> etudiantListe = new TreeMap<>();
-    private SortedMap<Integer, Personnel> personnelListe = new TreeMap<>();
+    private SortedMap<Integer, Individu> individuListe = new TreeMap<>();
     private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
-    private SortedMap<Integer, Personnel>personnelInscrit = new TreeMap<>();
-    private PriorityQueue<Etudiant> listeAttente = new PriorityQueue<>();
+    private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
+    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>();
     private SortedSet<Personnel> etudiantAccepte = new TreeSet<>();
     private SortedSet<Table> etudiantTable = new TreeSet<>();
     private SortedSet<Table> personnelTable = new TreeSet<>();
 
     private LocalDate dateGala;
 
-    public Gala(LocalDate date){
+    public Gala(LocalDate date) {
         dateGala = date;
         File etudiant = new File("data/etudiants.txt");
         File personnel = new File("data/personnel.txt");
@@ -42,7 +42,7 @@ public class Gala {
                 String email = scEtudiant.next();
                 int annee = Integer.parseInt(scEtudiant.next());
 
-                etudiantListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
+                individuListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
             }
             scEtudiant.close();
 
@@ -54,11 +54,10 @@ public class Gala {
                 String telephone = scPersonnel.next();
                 String email = scPersonnel.next();
 
-                personnelListe.put(num, new Personnel(num, nom, prenom, telephone, email));
+                individuListe.put(num, new Personnel(num, nom, prenom, telephone, email));
             }
             scPersonnel.close();
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -71,39 +70,50 @@ public class Gala {
         }
     }
 
-    public boolean estPresent(int id){
-        return switch (personnelListe.get(id).getType()) {
-            case 0 -> personnelListe.containsKey(id);
-            case 1 -> etudiantListe.containsKey(id);
-            default -> throw new NumberFormatException();
-        };
+    public boolean estPresent(int type, int id) {
+        return individuListe.containsKey(id) && type == individuListe.get(id).getType();
     }
 
-    public boolean inscription(int id){
+    public boolean inscription(int id) {
         //TODO verifier si le get ne retourne rien, si cela fonctionne
-        switch (personnelListe.get(id).getType()) {
+
+        switch (individuListe.get(id).getType()) {
             case 0 -> {
-                if(estPresent(id)) {
-                    personnelInscrit.put(id, personnelListe.get(id));
+                if (estPresent(individuListe.get(id).getType(), id)) {
+                    personnelInscrit.put(id, (Personnel) individuListe.get(id));
                     return true;
+                } else {
+                    return false;
                 }
-                else {return false;}
             }
             case 1 -> {
-                if(estPresent(id)){
+                if (estPresent(individuListe.get(id).getType(), id)) {
                     etudiantInscrit.put(id, etudiantInscrit.get(id));
                     return true;
+                } else {
+                    return false;
                 }
-                else {return false;}
             }
             default -> throw new NumberFormatException();
         }
     }
 
-    public boolean estInscrit(int id){
-        return switch (personnelListe.get(id).getType()) {
+    public boolean estInscrit(int id) {
+        return switch (individuListe.get(id).getType()) {
             case 0 -> personnelInscrit.containsKey(id);
             case 1 -> etudiantInscrit.containsKey(id);
+            default -> throw new NumberFormatException();
+        };
+    }
+
+    public int getIndividu(int id) {
+        return individuListe.get(id).getType();
+    }
+
+    private boolean desinscription(int id){
+        return switch (individuListe.get(id).getType()) {
+            case 0 -> personnelInscrit.remove(id, getIndividu(id));
+            case 1 -> etudiantInscrit.remove(id, getIndividu(id));
             default -> throw new NumberFormatException();
         };
     }
