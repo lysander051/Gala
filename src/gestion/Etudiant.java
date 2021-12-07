@@ -8,5 +8,8 @@ public class Etudiant extends Individu{
         this.anneeFormation = anneeFormation;
     }
 
-
+    @Override
+    public int getType() {
+        return 1;
+    }
 }
