@@ -14,7 +14,22 @@ public class Controleur {
 
     // affiche Etat de gala et son contenu
 
-    /*public boolean identification(Individu pers) {
-        int identite=ihm.
+    public boolean identification() {
+        Boolean present=false;
+        while(!present) {
+            // demande si etudiant ou personnel et retourne 0 pour etudiant et 1 pour personnel
+            int identite = ihm.demanderIdentite();
+            // demande numero etudiant
+            int numero = ihm.demandeIdentification();
+            // verifie si dans la listeEtudiant si identite=0 et listePersonnel si identite=1 le numero est dedans
+            present=gala.verificationIdentification(identite, numero);
+        }
+        return present;
+    }
+
+    /*public inscription(){
+
     }*/
+
+
 }
