@@ -40,8 +40,8 @@ public class Controleur {
     }
 
 
-    public void inscription(int type,int id){
-            gala.faireInscription(id);
+    public void inscription(int id){
+            gala.inscription(id);
     }
 
 

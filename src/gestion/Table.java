@@ -20,6 +20,15 @@ public class Table implements Comparable<Table>{
         }
     }
 
+    public boolean retirerParticipant(int id){
+        for (int i = 0; i < PLACE_PAR_TABLE; i++) {
+            if (participants.get(i).getId() == id){
+                participants.remove(participants.get(i));
+            }
+        }
+        return false;
+    }
+
     @Override
     public int compareTo(Table t) {
         return numTable-t.numTable;

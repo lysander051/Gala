@@ -110,11 +110,37 @@ public class Gala {
     }
 
     private boolean desinscription(int id){
-        return switch (individuListe.get(id).getType()) {
-            case 0 -> personnelInscrit.remove(id, getIndividu(id));
-            case 1 -> etudiantInscrit.remove(id, getIndividu(id));
+        switch (individuListe.get(id).getType()) {
+            case 0 -> {
+                for (int i = 0; i < 10; i++) {
+                    if (tables.get(i).retirerParticipant(id)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            case 1 -> {
+                for (Individu e: etudiantAttente) {
+                if(e.getId() == id){
+                    etudiantAttente.remove(e);
+                    return true;
+                }
+            }
+                for (Individu e: etudiantAccepte) {
+                    if(e.getId() == id){
+                        etudiantAccepte.remove(e);
+                        return true;
+                    }
+                }
+                for (int i = 10; i < 25; i++) {
+                    if (tables.get(i).retirerParticipant(id)){
+                        return true;
+                    }
+                }
+                return false;
+            }
             default -> throw new NumberFormatException();
-        };
+        }
     }
 
     public String tablePersonnel(){
