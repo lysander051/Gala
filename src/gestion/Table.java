@@ -1,7 +1,6 @@
 package gestion;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Table implements Comparable<Table>{
     private final int PLACE_PAR_TABLE = 8;
@@ -10,15 +9,37 @@ public class Table implements Comparable<Table>{
     private int numTable;
     private int placePrise;
 
-    private Set<Individu> participants = new HashSet<>();
+    private List<Individu> participants = new ArrayList<>();
 
 
     public Table(){
         numTable=++id;
+
+        for (int i = 0; i < PLACE_PAR_TABLE; i++) {
+            participants.add(null);
+        }
     }
 
     @Override
     public int compareTo(Table t) {
         return numTable-t.numTable;
+    }
+
+    @Override
+    public String toString() {
+        String s = "[1: ";
+        if (participants.get(0).toString()!=null)
+            s+=participants.get(0).toString();
+        else
+            s+="";
+
+        for (int i = 1; i < PLACE_PAR_TABLE; i++){
+            s+= ", " + i+1 + ": ";
+            if (participants.get(i).toString()!=null)
+                s+=participants.get(i).toString();
+            else
+                s+="";
+        }
+        return s + "]";
     }
 }

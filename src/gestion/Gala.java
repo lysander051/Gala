@@ -7,9 +7,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Gala {
-    private final int TARIF1 = 10;
-    private final int TARIF2 = 15;
-    private final int TARIF3 = 20;
+    private final int TARIF1 = 10; //etudiants de dernière année
+    private final int TARIF2 = 15; //autres etudiants
+    private final int TARIF3 = 20;  //personnels et accompagnants
     private final int TABLE_ETUDIANT = 15;
     private final int TABLE_PERSONNEL = 10;
 
@@ -18,8 +18,7 @@ public class Gala {
     private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
     private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>();
     private SortedSet<Personnel> etudiantAccepte = new TreeSet<>();
-    private SortedSet<Table> etudiantTable = new TreeSet<>();
-    private SortedSet<Table> personnelTable = new TreeSet<>();
+    private List<Table> tables = new ArrayList<>();
 
     private LocalDate dateGala;
 
@@ -62,11 +61,11 @@ public class Gala {
         }
 
         //creation des table du personnel et des etudiant
-        for (int i = 0; i < TABLE_PERSONNEL; i++) {
-            personnelTable.add(new Table());
+        for (int i=0; i < TABLE_PERSONNEL; i++) {
+            tables.add(new Table());
         }
-        for (int i = 0; i < TABLE_ETUDIANT; i++) {
-            personnelTable.add(new Table());
+        for (int i=0; i < TABLE_ETUDIANT; i++) {
+            tables.add(new Table());
         }
     }
 
@@ -116,5 +115,25 @@ public class Gala {
             case 1 -> etudiantInscrit.remove(id, getIndividu(id));
             default -> throw new NumberFormatException();
         };
+    }
+
+    public String tablePersonnel(){
+        String s = "Table du personnel: \n";
+        s+= table(0,10);
+        return s;
+    }
+
+    public String tableEtudiant(){
+        String s = "Table des étudiants: \n";
+        s+= table(10, 25);
+        return s;
+    }
+
+    private String table(int debut, int fin){
+        String s = "";
+        for (int i = debut; i < fin; i++){
+            s+= "Table " + i+1 + ": " + tables.get(i) + "\n";
+        }
+        return s;
     }
 }

@@ -43,4 +43,9 @@ public  abstract class Individu implements Comparable<Individu>{
     public int getIdentifiant() {
         return identifiant;
     }
+
+    @Override
+    public String toString() {
+        return  nom;
+    }
 }
