@@ -21,6 +21,7 @@ public class Controleur {
         }
 
 
+        this.identification();
     }
 
     // affiche Etat de gala et son contenu

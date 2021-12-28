@@ -25,43 +25,69 @@ public class Gala implements Serializable {
 
     public Gala(LocalDate date) {
         dateGala = date;
-        File etudiant = new File("data/etudiants.txt");
-        File personnel = new File("data/personnel.txt");
 
         //creation des listes initiales pour les etudiants et le personnel
         try {
+            File etudiant = new File("./data/etudiants.txt");
+            File personnel = new File("./data/personnel.txt");
             Scanner scEtudiant = new Scanner(etudiant);
             Scanner scPersonnel = new Scanner(personnel);
 
             //creation liste etudiant
             while (scEtudiant.hasNextLine()) {
-                int num = Integer.parseInt(scEtudiant.next());
+                if (!scEtudiant.hasNextInt()) {
+                    break;
+                }
+                int num = scEtudiant.nextInt();
+                if (!scEtudiant.hasNext()) {
+                    break;
+                }
                 String nom = scEtudiant.next();
+                if (!scEtudiant.hasNext()) {
+                    break;
+                }
                 String prenom = scEtudiant.next();
                 String telephone = scEtudiant.next();
+                if (!scEtudiant.hasNext()) {
+                    break;
+                }
                 String email = scEtudiant.next();
-                int annee = Integer.parseInt(scEtudiant.next());
-
-                individuListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
-
+                if (!scEtudiant.hasNextInt()) {
+                    break;
+                }
+                int annee = scEtudiant.nextInt();
+                Etudiant e = new Etudiant(num, nom, prenom, telephone, email, annee);
+                individuListe.put(num, e);
             }
-
             scEtudiant.close();
 
             //creation liste personnel
             while (scPersonnel.hasNextLine()) {
-                int num = Integer.parseInt(scPersonnel.next());
+                if (!scPersonnel.hasNextInt()) {
+                    break;
+                }
+                int num = scPersonnel.nextInt();
+                if (!scPersonnel.hasNext()) {
+                    break;
+                }
                 String nom = scPersonnel.next();
+                if (!scPersonnel.hasNext()) {
+                    break;
+                }
                 String prenom = scPersonnel.next();
+                if (!scPersonnel.hasNext()) {
+                    break;
+                }
                 String telephone = scPersonnel.next();
+                if (!scPersonnel.hasNext()) {
+                    break;
+                }
                 String email = scPersonnel.next();
-
                 individuListe.put(num, new Personnel(num, nom, prenom, telephone, email));
             }
             scPersonnel.close();
-
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         //creation des table du personnel et des etudiant
@@ -128,7 +154,6 @@ public class Gala implements Serializable {
         };
     }
 
-    // POUR AVOIR LE TYPE DE L'INDIVIDU
     public int getIndividu(int id) {
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
