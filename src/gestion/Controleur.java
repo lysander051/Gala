@@ -21,9 +21,9 @@ public class Controleur {
         Boolean present=false;
         while(!present) {
             // demande si etudiant ou personnel et retourne 1 pour etudiant et 0 pour personnel
-            int type = ihm.demanderIdentite();
+            int type = ihm.getIdentite();
             // demande numero etudiant
-            numero = ihm.demandeIdentification();
+            numero = ihm.getNumero();
             // verifie si dans la listeEtudiant si identite=1 et listePersonnel si identite=0 le numero est dedans
             if(type==2 || numero==2)
             {
@@ -47,15 +47,13 @@ public class Controleur {
 
 
 
-    public finall() {
+    public void finale() {
         boolean sIdentifier=identification();
         if(!sIdentifier) {
             // PROGRAMME S'ARRETE
         }
         else {
-
-            ihm.inscriptionOuQuitter();
-
+            ihm.inscrireOuQuitter();
         }
 
     }

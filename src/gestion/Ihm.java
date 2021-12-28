@@ -11,7 +11,7 @@ public class Ihm {
      * @return 0, 1, 2 en fonction de si la personne est un étudiant ou un personnel
      */
 
-    public int demandeIdentite() {
+    public int getIdentite() {
         int id = -1;
         while (identite.hasNext()) {
             System.out.println("inscrivez 0 si vous êtes membre du personnel, 1 si vous êtes étudiants 2 pour quitter");
@@ -33,7 +33,7 @@ public class Ihm {
      * @return numero pour comparer avec la liste des Individus pouvant s'inscrire
      */
 
-    public int demanderNumero() {
+    public int getNumero() {
         int numero = 0;
         while (identite.hasNext()) {
             System.out.println("Entrez votre id personnel ou votre numéro étudiant: ");
@@ -51,7 +51,7 @@ public class Ihm {
      * @return 1 ou 2 en fonction de si l'utilisateur veut s'inscrire ou non
      */
 
-    public int InscrireOuQuitter() {
+    public int inscrireOuQuitter() {
         int continuer = 0;
         while (identite.hasNext()) {
             System.out.println("Souhaitez-vous vous inscrire (1) ou quitter l'inscription (0)?");

@@ -24,22 +24,22 @@ public class Gala {
 
     public Gala(LocalDate date) {
         dateGala = date;
-        File etudiant = new File("data/etudiants.txt");
-        File personnel = new File("data/personnel.txt");
 
         //creation des listes initiales pour les etudiants et le personnel
         try {
+            File etudiant = new File("./data/etudiants.txt");
+            File personnel = new File("./data/personnel.txt");
             Scanner scEtudiant = new Scanner(etudiant);
             Scanner scPersonnel = new Scanner(personnel);
 
             //creation liste etudiant
             while (scEtudiant.hasNextLine()) {
-                int num = Integer.parseInt(scEtudiant.next());
+                int num = scEtudiant.nextInt();
                 String nom = scEtudiant.next();
                 String prenom = scEtudiant.next();
                 String telephone = scEtudiant.next();
                 String email = scEtudiant.next();
-                int annee = Integer.parseInt(scEtudiant.next());
+                int annee = scEtudiant.nextInt();
 
                 individuListe.put(num, new Etudiant(num, nom, prenom, telephone, email, annee));
             }
@@ -47,7 +47,7 @@ public class Gala {
 
             //creation liste personnel
             while (scPersonnel.hasNextLine()) {
-                int num = Integer.parseInt(scPersonnel.next());
+                int num = scPersonnel.nextInt();
                 String nom = scPersonnel.next();
                 String prenom = scPersonnel.next();
                 String telephone = scPersonnel.next();
@@ -57,7 +57,7 @@ public class Gala {
             }
             scPersonnel.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         //creation des table du personnel et des etudiant
