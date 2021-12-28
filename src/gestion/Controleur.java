@@ -11,7 +11,7 @@ public class Controleur {
     public Controleur(Gala gala, Ihm ihm, LocalDate date) {
         this.gala = new Gala(date);
         this.ihm = new Ihm();
-
+        this.identification();
     }
 
     // affiche Etat de gala et son contenu
@@ -30,8 +30,6 @@ public class Controleur {
                 return false;
             }
             present=gala.estPresent(type, numero);
-
-
         }
 
         idIndividu=numero;
