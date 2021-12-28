@@ -1,6 +1,8 @@
 package gestion;
 
-public class Etudiant extends Individu{
+import java.io.Serializable;
+
+public class Etudiant extends Individu  {
     private int anneeFormation;
 
     public Etudiant(int identifiant,String nom, String prenom, String numTel, String eMail,  int anneeFormation) {
@@ -11,5 +13,14 @@ public class Etudiant extends Individu{
     @Override
     public int getType() {
         return 1;
+    }
+
+    @Override
+    public Type typeIndividu() {
+        return Type.ETUDIANT;
+    }
+
+    public int getAnneeFormation() {
+        return anneeFormation;
     }
 }

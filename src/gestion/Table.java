@@ -1,23 +1,24 @@
 package gestion;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Table implements Comparable<Table>{
+public class Table implements Comparable<Table>, Serializable {
     private final int PLACE_PAR_TABLE = 8;
 
-    private static int id;
+
     private int numTable;
-    private int placePrise;
+    private int placeLibre=8;
 
     private List<Individu> participants = new ArrayList<>();
 
 
     public Table(){
-        numTable=++id;
+        this.numTable=numTable;
 
-        for (int i = 0; i < PLACE_PAR_TABLE; i++) {
+        /*for (int i = 0; i < PLACE_PAR_TABLE; i++) {
             participants.add(null);
-        }
+        }*/
     }
 
     public boolean retirerParticipant(int id){
@@ -36,19 +37,42 @@ public class Table implements Comparable<Table>{
 
     @Override
     public String toString() {
-        String s = "[1: ";
-        if (participants.get(0).toString()!=null)
-            s+=participants.get(0).toString();
-        else
-            s+="";
+        String s = "("+placeLibre+" places restants) [";
+        boolean existe=false;
+        String sep="";
+        int nbPersonne=participants.size();
+        for (int i = 0; i < nbPersonne; i++){
+            if(existe){
+                sep=", ";
+            }
 
-        for (int i = 1; i < PLACE_PAR_TABLE; i++){
-            s+= ", " + i+1 + ": ";
-            if (participants.get(i).toString()!=null)
-                s+=participants.get(i).toString();
-            else
-                s+="";
+            if (participants.get(i)!=null)
+                s+=sep+participants.get(i).toString()+" (" +participants.get(i).getNbReservation()+") ";
+                existe=true;
+
         }
         return s + "]";
+    }
+
+    public int getNumTable() {
+        return numTable;
+    }
+
+    public int getPlaceLibre() {
+        return placeLibre;
+    }
+
+    public void ajoutPersonne(Individu pers,int placeOccupe){
+        participants.add(pers);
+        System.out.println("PARTICIPANTS   "  +participants);
+        setPlaceLibre(placeOccupe);
+    }
+
+    private void setPlaceLibre(int placeOccupe) {
+        this.placeLibre -= placeOccupe;
+    }
+
+    public boolean verificationPlaceSuffisant(int place){
+        return placeLibre>=place;
     }
 }

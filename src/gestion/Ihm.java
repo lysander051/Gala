@@ -3,7 +3,7 @@ package gestion;
 import java.util.Scanner;
 
 public class Ihm {
-    Scanner identite = new Scanner(System.in); //scanner utiliser dans toute la classe
+    Scanner sc = new Scanner(System.in); //scanner utiliser dans toute la classe
 
     /**
      * DemandeIdentite()
@@ -11,7 +11,7 @@ public class Ihm {
      * @return 0, 1, 2 en fonction de si la personne est un étudiant ou un personnel
      */
 
-    public int demandeIdentite() {
+    /*public int demandeIdentite() {
         int id = -1;
         while (identite.hasNext()) {
             System.out.println("inscrivez 0 si vous êtes membre du personnel, 1 si vous êtes étudiants 2 pour quitter");
@@ -25,15 +25,195 @@ public class Ihm {
             }
         }
         return id;
+    }*/
+
+    public int etudiantOuPersonnel() {
+        int type=-1;
+        boolean pasBonneReponse = true;
+        while (pasBonneReponse) {
+
+            System.out.print("Si vous êtes personnel : 0 \nSi vous êtes etudiant : 1 \nSi vous voulez quitter : q \nVotre choix :");
+            if (sc.hasNextInt()) {
+
+                type = sc.nextInt();
+                if (type == 0 || type == 1 || type == 2) {
+                   break;
+                }
+            } else {
+                if (sc.next().equals("q")) {
+                    return -1;
+                }
+            }
+
+        }
+        return type;
     }
 
+        public int demanderNumero(int type){
+
+            int numero=-1;
+            int taille;
+            boolean pasBonneReponse=true;
+            while(pasBonneReponse){
+                System.out.print("Veuillez entrer votre numero ou 'q' pour quitter\nVotre choix : ");
+                if(sc.hasNextInt()){
+                    numero=sc.nextInt();
+                    taille=String.valueOf(numero).length();
+                    if((type==1 && taille==7) || (type==0 && taille==4)) {
+                       break;
+                    }
+                }
+                else {
+                    if(sc.next().equals("q")){
+                        return -1;
+                    }
+
+                }
+            }
+            return numero;
+        }
+
+    public int quitOuInscription(){
+        int c=-1;
+
+        boolean pasBonneReponse=true;
+        while(pasBonneReponse){
+            System.out.print("Pour quitter : q\nPour s'inscrire: 1 \nVotre choix: ");
+            if(sc.hasNextInt()){
+                c=sc.nextInt();
+
+                if(c==1) {
+                    break;
+                }
+            }
+            else {
+                if(sc.next().equals("q")) {
+                    return -1;
+                }
+
+            }
+        }
+        return c;
+    }
+    public int choixMenu(){
+        int c=-1;
+
+        boolean pasBonneReponse=true;
+        while(pasBonneReponse){
+            System.out.print("Menu\n1 – Gérer les places du dîner \n2 – Se désinscrire \n3 – Quitter\nVotre choix :");
+            if(sc.hasNextInt()){
+                c=sc.nextInt();
+
+                if(c==1 || c==2 ) {
+                    break;
+                }
+                if(c==3){
+                    c=-1;
+                    break;
+                }
+            }
+            else {
+                sc.next();
+
+            }
+        }
+        return c;
+    }
+
+
+    public void affichageNbPlacePossible(int autorise){
+        System.out.println("Vous avez droit à "+autorise+" places");
+
+    }
+
+    public int OuiOuNonPlanTable(){
+        int choix=-1;
+        boolean pasBonneReponse = true;
+        while (pasBonneReponse) {
+
+            System.out.print("Voulez vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
+            if (sc.hasNextInt()) {
+
+                choix = sc.nextInt();
+                if (choix == 1 || choix == 2) {
+                    pasBonneReponse=false;
+                }
+            } else {
+                if (sc.next().equals("q")) {
+                    return -1;
+                }
+            }
+
+        }
+        return choix;
+    }
+
+    public int demandeTable(String table,Type t){
+        String s="";
+        if(t==Type.PERSONNEL){
+            s="Choisissez entre les tables 1 - 10";
+        }
+        else{
+            s="Choisissez entre les tables 11 - 25";
+        }
+        System.out.println(table);
+        int choix=-1;
+        boolean pasBonneReponse = true;
+        while (pasBonneReponse) {
+
+            System.out.print(s+"\nVotre choix :");
+            if (sc.hasNextInt()) {
+
+                choix = sc.nextInt();
+                if ((t==Type.ETUDIANT && choix>=11 && choix<=25) || (t==Type.PERSONNEL && choix>=1 && choix<=10)){
+                    pasBonneReponse=false;
+                }
+            } else {
+                if (sc.next().equals("q")) {
+                    return -1;
+                }
+            }
+
+        }
+        return choix;
+
+    }
+
+    public int demandeNbPlace(int autorise){
+        int choix=-1;
+        boolean pasBonneReponse = true;
+        while (pasBonneReponse) {
+
+            System.out.print("Vous avez droit jusqu'à "+autorise+" places "+"\nVotre choix :");
+            if (sc.hasNextInt()) {
+
+                choix = sc.nextInt();
+                if (choix>0 && choix<=autorise){
+                    pasBonneReponse=false;
+                }
+            } else {
+                if (sc.next().equals("q")) {
+                    return -1;
+                }
+            }
+
+        }
+        return choix;
+    }
+
+    public void afficheSyntheseReservation(String s){
+        System.out.println(s);
+    }
+    public void afficheSyntheseReservation(int nb){
+        // a completer
+    }
     /**
      * méthode demanderNumero()
      * Cette méthode permet de récupérer le numéro étudiant ou du personnel qui réalise l'inscription
      * @return numero pour comparer avec la liste des Individus pouvant s'inscrire
      */
 
-    public int demanderNumero() {
+   /* public int demanderNumero() {
         int numero = 0;
         while (identite.hasNext()) {
             System.out.println("Entrez votre id personnel ou votre numéro étudiant: ");
@@ -43,7 +223,7 @@ public class Ihm {
             }
         }
         return numero;
-    }
+    }*/
 
     /**
      * méthode InscrireOuQuitter()
@@ -51,7 +231,7 @@ public class Ihm {
      * @return 1 ou 2 en fonction de si l'utilisateur veut s'inscrire ou non
      */
 
-    public int InscrireOuQuitter() {
+    /*public int InscrireOuQuitter() {
         int continuer = 0;
         while (identite.hasNext()) {
             System.out.println("Souhaitez-vous vous inscrire (1) ou quitter l'inscription (0)?");
@@ -63,7 +243,7 @@ public class Ihm {
             }
         }
         return continuer;
-    }
+    }*/
 
     /**
      * méthode afficherMenu()
@@ -71,7 +251,7 @@ public class Ihm {
      * @return 0 pour afficher les places du diner, 1 pour se désinscrire avec confirmation et 2 pour quitter
      */
 
-    public int afficherMenu() {
+   /* public int afficherMenu() {
         int menu = -1;
         Scanner sc = new Scanner(System.in);
         while (identite.hasNext()) {
@@ -91,5 +271,5 @@ public class Ihm {
             }
         }
         return menu;
-    }
+    }*/
 }

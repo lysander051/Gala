@@ -9,4 +9,9 @@ public class Personnel extends Individu{
     public int getType() {
         return 0;
     }
+
+    @Override
+    public Type typeIndividu() {
+        return Type.PERSONNEL;
+    }
 }
