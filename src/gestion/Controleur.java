@@ -135,7 +135,6 @@ public class Controleur {
             switch (pers.typeIndividu()) {
                 case PERSONNEL -> {
                     gererPlacePersonnel();
-
                     break;
                 }
                 case ETUDIANT -> {

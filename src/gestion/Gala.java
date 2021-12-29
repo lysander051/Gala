@@ -260,7 +260,6 @@ public class Gala implements Serializable {
         Table table = null;
 
         for (Table t : tables) {
-            System.out.println(t.getNumTable());
             if (t.getNumTable() == numTable) {
 
                 table = t;
