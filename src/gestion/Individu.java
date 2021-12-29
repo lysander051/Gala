@@ -65,4 +65,8 @@ public  abstract class Individu implements Comparable<Individu>, Serializable {
     public Reservation getReservation() {
         return reservation;
     }
+
+    public int getNumTableReservation() {
+        return getReservation().getNumTable();
+    }
 }

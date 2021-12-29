@@ -24,13 +24,16 @@ public class Main {
         }*/
 
         Controleur c1=new Controleur(LocalDate.now());
-        c1.identification();
+       // c1.identification();
         c1.inscription();
         c1.choisirMenu();
-        Controleur c2=new Controleur(LocalDate.now());
-        c2.identification();
-        c2.inscription();
-        c2.choisirMenu();
+        c1.inscription();
+        //Controleur c2=new Controleur(LocalDate.now());
+        c1.identification();
+        c1.choisirMenu();
+        c1.inscription();
+        /*c2.inscription();
+        c2.choisirMenu();*/
 
 
     }

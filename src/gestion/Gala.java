@@ -17,8 +17,21 @@ public class Gala implements Serializable {
     private SortedMap<Integer, Individu> individuListe = new TreeMap<>();
     private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
     private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
-    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>();
-    private SortedSet<Personnel> etudiantAccepte = new TreeSet<>();
+    private PriorityQueue<Etudiant> etudiantAttente=new PriorityQueue<>(50, new Comparator<Etudiant>() {
+        @Override
+        public int compare(Etudiant o1, Etudiant o2) {
+            if (o1.getAnneeFormation() == 5 && o2.getAnneeFormation() == 5) {
+                return 0;
+            } else if (o1.getAnneeFormation() == 5) {
+                return -1;
+            } else if (o2.getAnneeFormation() == 5) {
+                return 1;
+            }
+            return 2;
+        }
+    }
+    );
+    private SortedSet<Etudiant> etudiantAccepte = new TreeSet<>();
     private List<Table> tables = new ArrayList<>();
 
     private LocalDate dateGala;
@@ -153,6 +166,56 @@ public class Gala implements Serializable {
             default -> throw new NumberFormatException();
         };
     }
+    public int getNbTotalEtudiant(){
+        return TABLE_ETUDIANT*8;
+        // ON DOIT MODIFIER LE 8
+    }
+    public int getNbEtudiantAccepte(){
+        int nb=0;
+        for(Etudiant e:etudiantAccepte){
+            nb+=e.getNbReservation();
+        }
+        return nb;
+    }
+    public int getNbPlaceAcceptationRestant(){
+        return getNbTotalEtudiant()-getNbEtudiantAccepte();
+    }
+
+    public void updateReservation(){
+        int restant=getNbPlaceAcceptationRestant();
+        Etudiant sommet;
+        int nbPlace;
+        while(restant>0){
+             sommet=etudiantAttente.peek();
+             if(sommet==null){
+                 break;
+             }
+            nbPlace=sommet.getNbReservation();
+            if(restant>nbPlace){
+                etudiantAccepte.add(sommet);
+                etudiantAttente.poll();
+               restant-=nbPlace;
+            }
+            else{
+                // je dois chercher la personne qui a besoin de nb de place qui reste
+            }
+        }
+
+    }
+    //TODO continuer
+    public boolean attenteConfirmation(int id){
+        Individu e= getPersonne(id);
+        if(e.typeIndividu()==Type.ETUDIANT && etudiantAccepte.contains(e) && e.getNumTableReservation()==null){
+            return true;
+        }
+        return false;
+    }
+
+    public void enregistrementListeAttente(int num,LocalDate date,int nbPlace){
+        Etudiant e=(Etudiant) getPersonne(num);
+        etudiantAttente.add(e);
+        e.setReservation(new Reservation(date,0,nbPlace));
+    }
 
     public int getIndividu(int id) {
         if (individuListe.get(id) == null) {
@@ -178,22 +241,26 @@ public class Gala implements Serializable {
 
     public boolean verificationPlaceEtTable(int numTable, int nbPlace) {
         boolean suffisant = false;
-        Table t = getTable(numTable);
+        Table t = tables.get(numTable-1);
 
-        if (t.getNumTable() == numTable) {
+        System.out.println("laa"+t.getPlaceLibre());
+
+
             suffisant = t.getPlaceLibre() >= nbPlace;
             System.out.println(suffisant);
 
-        }
+
 
 
         return suffisant;
 
     }
 
-    public Table getTable(int numTable) {
+   /* public Table getTable(int numTable) {
         Table table = null;
+
         for (Table t : tables) {
+            System.out.println(t.getNumTable());
             if (t.getNumTable() == numTable) {
 
                 table = t;
@@ -201,7 +268,7 @@ public class Gala implements Serializable {
             }
         }
         return table;
-    }
+    }*/
 
     public boolean faireReservation(int numTable, int nbPlace, int id, LocalDate date) {
 
@@ -209,7 +276,7 @@ public class Gala implements Serializable {
         if (accepte) {
             Individu pers = getPersonne(id);
             pers.setReservation(new Reservation(date, numTable, nbPlace));
-            Table t = getTable(numTable);
+            Table t = tables.get(numTable-1);
             t.ajoutPersonne(pers, nbPlace);
             System.out.println(pers);
             System.out.println(t.getPlaceLibre());
@@ -321,6 +388,7 @@ public class Gala implements Serializable {
             if(pers.typeIndividu()==Type.ETUDIANT){
             }
         }
+
         return reserve;
     }
 }

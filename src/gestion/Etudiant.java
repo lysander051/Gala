@@ -2,7 +2,7 @@ package gestion;
 
 import java.io.Serializable;
 
-public class Etudiant extends Individu  {
+public class Etudiant extends Individu implements Serializable {
     private int anneeFormation;
 
     public Etudiant(int identifiant,String nom, String prenom, String numTel, String eMail,  int anneeFormation) {

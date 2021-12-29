@@ -1,6 +1,8 @@
 package gestion;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Controleur {
     private Gala gala;
@@ -10,11 +12,19 @@ public class Controleur {
 
 
     public Controleur(LocalDate date) {
-        this.gala = new Gala(date);
-        this.ihm = new Ihm();
+
         try {
             stockage=new ServiceStockage();
-            stockage.charger();
+            File fichGala = new File("./gala.ser");
+            if(fichGala.exists()){
+
+                this.gala = new Gala(date);
+                stockage.enregistrer(gala);
+            }
+            else {
+                this.gala = (Gala)stockage.charger();
+            }
+            this.ihm = new Ihm();
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -74,8 +84,10 @@ public class Controleur {
     }
 
 
+
+
     public void choisirMenu(){
-        int menu= ihm.choixMenu();
+        int menu= ihm.choixMenu(gala.attenteConfirmation(idIndividu));
         System.out.println("tonga ato amin'ny choisir menu");
         if(menu==-1){
             // quitter
@@ -87,6 +99,12 @@ public class Controleur {
         }
         if(menu==2){
             // se desinscrire
+        }
+        if(menu==3){
+            //pour les etudiants qui viennent d'etre accepte
+        }
+        if(menu==4){
+            // confirmation reservation
         }
     }
 
@@ -121,6 +139,7 @@ public class Controleur {
                     break;
                 }
                 case ETUDIANT -> {
+                    gererPlaceEtudiant();
                     break;
                 }
                 default -> throw new IllegalArgumentException("Type inexistant");
@@ -137,8 +156,47 @@ public class Controleur {
         // quitter l'application
 
     }
+    public void miseAJourEtudiant(LocalDate dateNow,LocalDate dateGala){
+        if(ChronoUnit.MONTHS.between(dateNow,dateGala)<=1){
+            gala.updateReservation();
+        }
+    }
+
+    public void gererPlaceEtudiant(){
+        int place = ihm.demandeNbPlace(gala.nbPlaceAutoriseIndividu(idIndividu));
+        gala.enregistrementListeAttente(idIndividu,LocalDate.now(),place);
+
+    }
+
+    public void confirmationEtudiant(){
+        int place=gala.getPersonne(idIndividu).getNbReservation();
+        ihm.afficheNbReservationEt(place);
+        int choix=ihm.OuiOuNonPlanTable();
 
 
+
+        try {
+            int table=0;
+
+            if(choix==1){
+                table = ihm.demandeTable(gala.tablePersonnel(),Type.PERSONNEL);
+
+            }
+
+            if(choix==2){
+                table= gala.getTableAleatoire(place,Type.PERSONNEL);
+            }
+
+            gala.faireReservation(table,place,idIndividu,LocalDate.now());
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            choisirMenu();
+        }
+
+
+
+    }
 
     public void gererPlacePersonnel(){
 

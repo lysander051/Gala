@@ -95,12 +95,17 @@ public class Ihm {
         }
         return c;
     }
-    public int choixMenu(){
+    public int choixMenu(boolean sup){
         int c=-1;
+        String s="Menu\n1 – Gérer les places du dîner \n2 – Se désinscrire \n3 – Quitter\n";
+        if(sup){
+            s+="4-Confirmation réservation\n";
+        }
+        s+="Votre choix :";
 
         boolean pasBonneReponse=true;
         while(pasBonneReponse){
-            System.out.print("Menu\n1 – Gérer les places du dîner \n2 – Se désinscrire \n3 – Quitter\nVotre choix :");
+            System.out.print(s);
             if(sc.hasNextInt()){
                 c=sc.nextInt();
 
@@ -109,6 +114,9 @@ public class Ihm {
                 }
                 if(c==3){
                     c=-1;
+                    break;
+                }
+                if(sup && c==4){
                     break;
                 }
             }
@@ -120,6 +128,9 @@ public class Ihm {
         return c;
     }
 
+    public void afficheNbReservationEt(int place){
+        System.out.println("Vous avez reservé "+place+" places");
+    }
 
     public void affichageNbPlacePossible(int autorise){
         System.out.println("Vous avez droit à "+autorise+" places");

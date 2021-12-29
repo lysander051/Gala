@@ -17,6 +17,10 @@ public class Reservation implements Serializable {
 
     }
 
+    public int getNumTable() {
+        return numTable;
+    }
+
     public int getNbPlace() {
         return nbPlace;
     }
