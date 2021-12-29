@@ -1,6 +1,7 @@
 package gestion;
 
 import java.io.Serializable;
+import java.time.temporal.ChronoUnit;
 
 public class Etudiant extends Individu implements Serializable {
     private int anneeFormation;
@@ -22,5 +23,9 @@ public class Etudiant extends Individu implements Serializable {
 
     public int getAnneeFormation() {
         return anneeFormation;
+    }
+
+    public int compare(Etudiant e1, Etudiant e2) {
+        return (int) ChronoUnit.DAYS.between(e1.getDateReservation(), e2.getDateReservation());
     }
 }

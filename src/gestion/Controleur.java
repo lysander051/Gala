@@ -10,14 +10,11 @@ public class Controleur {
     private int idIndividu;
     private ServiceStockage stockage;
 
-
     public Controleur(LocalDate date) {
-
         try {
             stockage=new ServiceStockage();
             File fichGala = new File("./gala.ser");
             if(fichGala.exists()){
-
                 this.gala = new Gala(date);
                 stockage.enregistrer(gala);
             }
@@ -29,64 +26,38 @@ public class Controleur {
         catch (Exception e){
             System.out.println(e.getMessage());
         }
-
-
         this.identification();
     }
 
     // affiche Etat de gala et son contenu
-
-    public boolean identification() {
-        int numero=0;
-        // demande si etudiant ou personnel et retourne 1 pour etudiant et 0 pour personnel
-        int type = ihm.etudiantOuPersonnel();
-        if(type==-1){
-            //exit
-            return false;
+    public void identification() {
+        int id=0;
+        Type type = ihm.etudiantOuPersonnel();
+        if(type==null){
+            System.exit(0);
         }
-        Boolean present=false;
-        while(!present) {
-            // demande numero etudiant
-            try {
-                numero = ihm.demanderNumero(type);
-                // verifie si dans la listeEtudiant si identite=1 et listePersonnel si identite=0 le numero est dedans
-                if (numero == -1) {
-                    //exit
-                    return false;
-                }
-                present = gala.estPresent(type, numero);
-            }
-            catch (IllegalArgumentException e){
-                System.out.println(e.getMessage());
-            }
-
-
+        while(true) {
+            id = ihm.demanderNumero();
+            if (gala.estPresent(type, id))
+                break;
+            System.out.println("le numéro d'identification n'éxiste pas");
         }
-
-        idIndividu=numero;
-
-        return present;
+        idIndividu=id;
+        this.inscription();
     }
 
-
-    public void inscription(){
-           if(!gala.estInscrit(idIndividu)){
-               int qi=ihm.quitOuInscription();
-               if(qi==-1){
-                   // quitter
-
-               }
-               else{
-                   gala.inscription(idIndividu);
-               }
-           }
-
+    private void inscription(){
+        if(!gala.estInscrit(idIndividu)){
+            boolean qi=ihm.quitOuInscription();
+            if(!qi){
+                System.exit(0);
+            }
+            gala.inscription(idIndividu);
+        }
+        this.Menu();
     }
 
-
-
-
-    public void choisirMenu(){
+    public void Menu(){
         int menu= ihm.choixMenu(gala.attenteConfirmation(idIndividu));
         System.out.println("tonga ato amin'ny choisir menu");
         if(menu==-1){
@@ -107,7 +78,6 @@ public class Controleur {
             // confirmation reservation
         }
     }
-
 
     public void gererPlace(){
         Individu pers=gala.getPersonne(idIndividu);
@@ -153,8 +123,8 @@ public class Controleur {
         }
 
         // quitter l'application
-
     }
+
     public void miseAJourEtudiant(LocalDate dateNow,LocalDate dateGala){
         if(ChronoUnit.MONTHS.between(dateNow,dateGala)<=1){
             gala.updateReservation();
@@ -171,78 +141,34 @@ public class Controleur {
         int place=gala.getPersonne(idIndividu).getNbReservation();
         ihm.afficheNbReservationEt(place);
         int choix=ihm.OuiOuNonPlanTable();
-
-
-
         try {
             int table=0;
-
-            if(choix==1){
+            if(choix==1)
                 table = ihm.demandeTable(gala.tablePersonnel(),Type.PERSONNEL);
-
-            }
-
-            if(choix==2){
+            if(choix==2)
                 table= gala.getTableAleatoire(place,Type.PERSONNEL);
-            }
-
             gala.faireReservation(table,place,idIndividu,LocalDate.now());
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
             choisirMenu();
         }
-
-
-
     }
 
     public void gererPlacePersonnel(){
-
         int choix=ihm.OuiOuNonPlanTable();
-
-
-
-            try {
-                int table=0;
-
-                if(choix==1){
-                   table = ihm.demandeTable(gala.tablePersonnel(),Type.PERSONNEL);
-
-                }
-                int place = ihm.demandeNbPlace(gala.nbPlaceAutoriseIndividu(idIndividu));
-                if(choix==2){
-                    table= gala.getTableAleatoire(place,Type.PERSONNEL);
-                }
-
-                gala.faireReservation(table,place,idIndividu,LocalDate.now());
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                choisirMenu();
+        try {
+            int table=0;
+            if(choix==1){
+                table = ihm.demandeTable(gala.tablePersonnel(),Type.PERSONNEL);
             }
-
-
-
+            int place = ihm.demandeNbPlace(gala.nbPlaceAutoriseIndividu(idIndividu));
+            if(choix==2){
+                table= gala.getTableAleatoire(place,Type.PERSONNEL);
+            }
+            gala.faireReservation(table,place,idIndividu,LocalDate.now());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            choisirMenu();
+        }
     }
-
-
-
-
-   /* public finall() {
-        boolean sIdentifier=identification();
-        if(!sIdentifier) {
-            // PROGRAMME S'ARRETE
-        }
-        else {
-
-            ihm.inscriptionOuQuitter();
-
-        }
-
-    }*/
-
-
-
-
 }

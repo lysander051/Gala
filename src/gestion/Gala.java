@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Gala implements Serializable {
@@ -17,20 +16,7 @@ public class Gala implements Serializable {
     private SortedMap<Integer, Individu> individuListe = new TreeMap<>();
     private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
     private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
-    private PriorityQueue<Etudiant> etudiantAttente=new PriorityQueue<>(50, new Comparator<Etudiant>() {
-        @Override
-        public int compare(Etudiant o1, Etudiant o2) {
-            if (o1.getAnneeFormation() == 5 && o2.getAnneeFormation() == 5) {
-                return 0;
-            } else if (o1.getAnneeFormation() == 5) {
-                return -1;
-            } else if (o2.getAnneeFormation() == 5) {
-                return 1;
-            }
-            return 2;
-        }
-    }
-    );
+    private PriorityQueue<Etudiant> etudiantAttente=new PriorityQueue<>();
     private SortedSet<Etudiant> etudiantAccepte = new TreeSet<>();
     private List<Table> tables = new ArrayList<>();
 
@@ -113,14 +99,10 @@ public class Gala implements Serializable {
     }
 
     // POUR SAVOIR SI L'INDIVIDU EST BIEN DANS L'ECOLE
-    public boolean estPresent(int type, int id) {
-        if (individuListe.containsKey(id) && type == individuListe.get(id).getType()) {
+    public boolean estPresent(Type type, int id) {
+        if (individuListe.containsKey(id) && type == individuListe.get(id).typeIndividu())
             return true;
-
-        } else {
-            throw new IllegalArgumentException("Echec de l'indentification");
-        }
-
+        return false;
     }
 
     // POUR FAIRE L'INSCRIPTION D'UN INDIVIDU DANS LA LISTE DE CE QUI VONT EN SOIREE
@@ -133,7 +115,7 @@ public class Gala implements Serializable {
         }
         switch (individuListe.get(id).getType()) {
             case 0 -> {
-                if (estPresent(individuListe.get(id).getType(), id)) {
+                if (estPresent(individuListe.get(id).typeIndividu(), id)) {
                     personnelInscrit.put(id, (Personnel) individuListe.get(id));
                     System.out.println(personnelInscrit);
                     return true;
@@ -142,7 +124,7 @@ public class Gala implements Serializable {
                 }
             }
             case 1 -> {
-                if (estPresent(individuListe.get(id).getType(), id)) {
+                if (estPresent(individuListe.get(id).typeIndividu(), id)) {
                     etudiantInscrit.put(id, (Etudiant) individuListe.get(id));
                     System.out.println(etudiantInscrit);
                     return true;
@@ -155,21 +137,22 @@ public class Gala implements Serializable {
     }
 
     // POUR SAVOIR SI L'INDIVIDU S'EST DEJA INSCRIT OU PAS
-
     public boolean estInscrit(int id) {
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
         }
-        return switch (individuListe.get(id).getType()) {
-            case 0 -> personnelInscrit.containsKey(id);
-            case 1 -> etudiantInscrit.containsKey(id);
+        return switch (individuListe.get(id).typeIndividu()) {
+            case PERSONNEL -> personnelInscrit.containsKey(id);
+            case ETUDIANT -> etudiantInscrit.containsKey(id);
             default -> throw new NumberFormatException();
         };
     }
+
     public int getNbTotalEtudiant(){
         return TABLE_ETUDIANT*8;
         // ON DOIT MODIFIER LE 8
     }
+
     public int getNbEtudiantAccepte(){
         int nb=0;
         for(Etudiant e:etudiantAccepte){
@@ -177,6 +160,7 @@ public class Gala implements Serializable {
         }
         return nb;
     }
+
     public int getNbPlaceAcceptationRestant(){
         return getNbTotalEtudiant()-getNbEtudiantAccepte();
     }
@@ -203,13 +187,13 @@ public class Gala implements Serializable {
 
     }
     //TODO continuer
-    public boolean attenteConfirmation(int id){
+    /*public boolean attenteConfirmation(int id){
         Individu e= getPersonne(id);
         if(e.typeIndividu()==Type.ETUDIANT && etudiantAccepte.contains(e) && e.getNumTableReservation()==null){
             return true;
         }
         return false;
-    }
+    }*/
 
     public void enregistrementListeAttente(int num,LocalDate date,int nbPlace){
         Etudiant e=(Etudiant) getPersonne(num);
@@ -375,19 +359,5 @@ public class Gala implements Serializable {
             s += "Table " + (int) (i + 1) + ": " + tables.get(i) + "\n";
         }
         return s;
-    }
-
-    public boolean aDejaReserve(int id){
-        boolean reserve=false;
-        Individu pers=getPersonne(id);
-        if(pers.getReservation()!=null){
-            reserve=true;
-        }
-        else{
-            if(pers.typeIndividu()==Type.ETUDIANT){
-            }
-        }
-
-        return reserve;
     }
 }

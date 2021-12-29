@@ -23,6 +23,8 @@ public class Reservation implements Serializable {
         return nbPlace;
     }
 
+    public LocalDate getDateReservation(){ return dateReservation; }
+
     @Override
     public String toString() {
         return "Reservation{" +
