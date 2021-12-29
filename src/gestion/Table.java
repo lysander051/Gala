@@ -7,17 +7,13 @@ public class Table implements Comparable<Table>, Serializable {
     private final int PLACE_PAR_TABLE = 8;
 
     private int numTable;
-    private int placeLibre=8;
+    private int placeLibre=PLACE_PAR_TABLE;
 
     private List<Individu> participants = new ArrayList<>();
 
 
     public Table(){
         this.numTable=numTable;
-
-        /*for (int i = 0; i < PLACE_PAR_TABLE; i++) {
-            participants.add(null);
-        }*/
     }
 
     public boolean retirerParticipant(int id){
@@ -37,18 +33,9 @@ public class Table implements Comparable<Table>, Serializable {
     @Override
     public String toString() {
         String s = "("+placeLibre+" places restants) [";
-        boolean existe=false;
-        String sep="";
         int nbPersonne=participants.size();
         for (int i = 0; i < nbPersonne; i++){
-            if(existe){
-                sep=", ";
-            }
-
-            if (participants.get(i)!=null)
-                s+=sep+participants.get(i).toString()+" (" +participants.get(i).getNbReservation()+") ";
-                existe=true;
-
+            s+=participants.get(i).toString() + "\n";
         }
         return s + "]";
     }

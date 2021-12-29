@@ -183,19 +183,14 @@ public class Gala implements Serializable {
         if (t.getNumTable() == numTable) {
             suffisant = t.getPlaceLibre() >= nbPlace;
             System.out.println(suffisant);
-
         }
-
-
         return suffisant;
-
     }
 
     public Table getTable(int numTable) {
         Table table = null;
         for (Table t : tables) {
             if (t.getNumTable() == numTable) {
-
                 table = t;
                 break;
             }
@@ -204,7 +199,6 @@ public class Gala implements Serializable {
     }
 
     public boolean faireReservation(int numTable, int nbPlace, int id, LocalDate date) {
-
         boolean accepte = verificationPlaceEtTable(numTable, nbPlace);
         if (accepte) {
             Individu pers = getPersonne(id);
@@ -217,7 +211,6 @@ public class Gala implements Serializable {
         } else {
             throw new IllegalArgumentException("Il n'y a pas assez de place sur la table " + numTable + " pour votre demande");
         }
-
     }
 
     public int getTableAleatoire(int nbPlace, Type t) {
@@ -239,17 +232,13 @@ public class Gala implements Serializable {
             default -> throw new IllegalArgumentException("Type inexistante");
         }
 
-
         for (int i = debut; i < fin; i++) {
             if (tables.get(i).verificationPlaceSuffisant(nbPlace)) {
                 numTable=i+1;
                 break;
             }
-
         }
         return numTable;
-
-
     }
 
     //  C4EST RETURN DONC çA NE CONTINUE MEME PAS
