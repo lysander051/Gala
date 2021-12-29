@@ -6,7 +6,6 @@ import java.util.*;
 public class Table implements Comparable<Table>, Serializable {
     private final int PLACE_PAR_TABLE = 8;
 
-
     private int numTable;
     private int placeLibre=8;
 

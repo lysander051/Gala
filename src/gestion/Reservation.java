@@ -13,8 +13,6 @@ public class Reservation implements Serializable {
         this.dateReservation = dateReservation;
         this.numTable = numTable;
         this.nbPlace = nbPlace;
-
-
     }
 
     public int getNbPlace() {
