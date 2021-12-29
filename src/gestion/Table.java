@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Table implements Comparable<Table>, Serializable {
     private final int PLACE_PAR_TABLE = 8;
+    private static int num;
 
     private int numTable;
     private int placeLibre=PLACE_PAR_TABLE;
@@ -13,7 +14,7 @@ public class Table implements Comparable<Table>, Serializable {
 
 
     public Table(){
-        this.numTable=numTable;
+        this.numTable=++num;
     }
 
     public boolean retirerParticipant(int id){
