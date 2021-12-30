@@ -1,5 +1,6 @@
 package gestion;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Ihm {
@@ -14,12 +15,17 @@ public class Ihm {
                     return Type.PERSONNEL;
                 if(choix==1)
                     return Type.ETUDIANT;
+
+                System.out.println("probléme d'identification");
             }
             if (sc.hasNext()){
                 if(sc.next().equals("q"))
                     return null;
+
                 System.out.println("probléme d'identification");
+
             }
+
         }
         return null;
     }
@@ -39,8 +45,11 @@ public class Ihm {
     public boolean quitOuInscription(){
         System.out.print("s'inscrire [1] | quitter [q]");
         while(sc.hasNext()){
-            if(sc.hasNextInt())
+            if(sc.hasNextInt()){
+                if(sc.nextInt()==1)
                 return true;
+            }
+
             if(sc.next().equals("q"))
                 return false;
             System.out.println("probléme de saisie");
@@ -106,6 +115,7 @@ public class Ihm {
     }
 
     public int demandeTable(String table,Type t){
+
         String s="";
         if(t==Type.PERSONNEL){
             s="Choisissez entre les tables 1 - 10";
@@ -113,7 +123,7 @@ public class Ihm {
         else{
             s="Choisissez entre les tables 11 - 25";
         }
-        System.out.println(table);
+
         int choix=-1;
         boolean pasBonneReponse = true;
         while (pasBonneReponse) {
@@ -151,8 +161,53 @@ public class Ihm {
         }
         return choix;
     }
+   /* public LocalDate dateAujourdhui(){
+        System.out.print("Date d'aujourd'hui :");
+        System.out.println("Saisissez une date (JJ/MM/AAAA) :");
 
-    public void afficheSyntheseReservation(String s){
+        String str = sc.nextLine();
+        if(str.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")){
+            SimpleDateFormat f = new SimpleDateFormat("MM-dd-yyyy");
+            Date date = f.parse(sDate);
+        }
+        else {
+            System.out.println("Erreur format");
+        }
+        sc.
+        while (sc.hasNext()) {
+            if (sc.hasNextInt()) {
+                int choix = sc.nextInt();
+                if(choix==0)
+                    return Type.PERSONNEL;
+                if(choix==1)
+                    return Type.ETUDIANT;
+
+                System.out.println("probléme d'identification");
+            }
+            if (sc.hasNext()){
+                if(sc.next().equals("q"))
+                    return null;
+
+                System.out.println("probléme d'identification");
+
+            }
+
+        }
+        return null;
+    }*/
+
+    public void afficheMontant(double montant,int nbPlace){
+        String s="Le montant à payer pour "+nbPlace+" : "+montant;
+        System.out.println(s);
+
+    }
+
+    public void afficheSyntheseReservation(String nom, int nbPlace, int numTable){
+        String s=nom+" a effectué une reservation de "+nbPlace+" place(s) à la table n°"+numTable;
+        System.out.println(s);
+    }
+    public void afficheSyntheseReservation(String nom, int nbPlace){
+        String s=nom+" a effectué une reservation de "+nbPlace+" place(s) ";
         System.out.println(s);
     }
     public void afficheSyntheseReservation(int nb){

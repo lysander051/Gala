@@ -10,18 +10,26 @@ public class Controleur {
     private int idIndividu;
     private ServiceStockage stockage;
 
+
     public Controleur(LocalDate date) {
         try {
             stockage=new ServiceStockage();
             File fichGala = new File("./gala.ser");
-            if(fichGala.exists()){
+            System.out.println(fichGala.exists());
+            this.ihm = new Ihm();
+            if(fichGala.length()==0){
+
                 this.gala = new Gala(date);
                 stockage.enregistrer(gala);
             }
             else {
+
                 this.gala = (Gala)stockage.charger();
+                miseAJourEtudiant(LocalDate.now(),date);
+
             }
-            this.ihm = new Ihm();
+
+
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -59,40 +67,47 @@ public class Controleur {
 
     public void Menu(){
         int menu= ihm.choixMenu(gala.attenteConfirmation(idIndividu));
-        System.out.println("tonga ato amin'ny choisir menu");
-        if(menu==-1){
-            // quitter
-        }
+
+
         if(menu==1){
-            System.out.println("tonga ato amin'ny gere place");
+
             gererPlace();
             // gerer place
         }
         if(menu==2){
             // se desinscrire
         }
-        if(menu==3){
-            //pour les etudiants qui viennent d'etre accepte
+        if(menu==-1){
+            //quitter
+            try{
+                stockage.enregistrer(gala);
+                System.exit(0);
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+
         }
         if(menu==4){
-            // confirmation reservation
+            confirmationEtudiant();
         }
     }
 
-    public void gererPlace(){
+   public void gererPlace(){
         Individu pers=gala.getPersonne(idIndividu);
         if(gala.aDejaReserve(idIndividu)){
             switch (pers.typeIndividu()){
                 case PERSONNEL -> {
-                    ihm.afficheSyntheseReservation(pers.getReservation().toString());
+                    ihm.afficheSyntheseReservation(pers.getNom(),pers.getNbReservation(),pers.getNumTableReservation());
                     break;
                 }
                 case ETUDIANT -> {
-                    if(pers.getReservation()==null){
-                        // a completer
+                    if(pers.getNumTableReservation()==0){
+
+                        ihm.afficheSyntheseReservation(pers.getNom(),pers.getNbReservation());
                     }
                     else{
-                        ihm.afficheSyntheseReservation(pers.getReservation().toString());
+                        ihm.afficheSyntheseReservation(pers.getNom(),pers.getNbReservation(),pers.getNumTableReservation());
 
                     }
                     break;
@@ -117,15 +132,20 @@ public class Controleur {
         }
         try{
             stockage.enregistrer(gala);
+            // quitter l'application
+
+
         }
         catch (Exception e){
             System.out.println(e.getMessage());
+
         }
 
-        // quitter l'application
+
     }
 
     public void miseAJourEtudiant(LocalDate dateNow,LocalDate dateGala){
+
         if(ChronoUnit.MONTHS.between(dateNow,dateGala)<=1){
             gala.updateReservation();
         }
@@ -144,13 +164,18 @@ public class Controleur {
         try {
             int table=0;
             if(choix==1)
-                table = ihm.demandeTable(gala.tablePersonnel(),Type.PERSONNEL);
+                System.out.println(gala.tableEtudiant());
+                table = ihm.demandeTable(gala.tableEtudiant(),Type.ETUDIANT);
             if(choix==2)
-                table= gala.getTableAleatoire(place,Type.PERSONNEL);
+                table= gala.getTableAleatoire(place,Type.ETUDIANT);
             gala.faireReservation(table,place,idIndividu,LocalDate.now());
+            ihm.afficheMontant(gala.montantReservationGala(idIndividu),place );
+            stockage.enregistrer(gala);
+            // quitter l'application
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            choisirMenu();
+            Menu();
         }
     }
 
@@ -159,16 +184,20 @@ public class Controleur {
         try {
             int table=0;
             if(choix==1){
+
+                System.out.println(gala.tablePersonnel());
                 table = ihm.demandeTable(gala.tablePersonnel(),Type.PERSONNEL);
+
             }
             int place = ihm.demandeNbPlace(gala.nbPlaceAutoriseIndividu(idIndividu));
             if(choix==2){
                 table= gala.getTableAleatoire(place,Type.PERSONNEL);
             }
             gala.faireReservation(table,place,idIndividu,LocalDate.now());
+            ihm.afficheMontant(gala.montantReservationGala(idIndividu),place );
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            choisirMenu();
+            Menu();
         }
     }
 }

@@ -9,10 +9,11 @@ public class Reservation implements Serializable {
     private int nbPlace;
     private double montant;
 
-    public Reservation(LocalDate dateReservation, int numTable, int nbPlace) {
+    public Reservation(LocalDate dateReservation, int numTable, int nbPlace,int tarifPrinc,int tarifInv) {
         this.dateReservation = dateReservation;
         this.numTable = numTable;
         this.nbPlace = nbPlace;
+        this.montant=tarifPrinc+((nbPlace-1)*tarifInv);
     }
 
     public int getNumTable() {
@@ -33,5 +34,11 @@ public class Reservation implements Serializable {
                 ", nbPlace=" + nbPlace +
                 ", montant=" + montant +
                 '}';
+    }
+
+
+
+    public double getMontant() {
+        return montant;
     }
 }

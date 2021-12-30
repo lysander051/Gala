@@ -44,15 +44,32 @@ public  abstract class Individu implements Comparable<Individu>, Serializable {
     @Override
     public String toString() {return  nom+" "+reservation;}
 
-    public int getNbReservation(){return reservation.getNbPlace();}
+    public int getNbReservation(){
+        if(reservation==null){
+            return 0;
+        }
+        return reservation.getNbPlace();}
 
     public abstract Type typeIndividu();
 
     public void setReservation(Reservation reservation) {this.reservation = reservation;}
 
+
     public int getNumTableReservation() {
-        return this.getNumTableReservation();
+        if(reservation==null){
+            return 0;
+        }
+        return this.reservation.getNumTable();
     }
 
     public LocalDate getDateReservation(){ return this.getDateReservation();}
+
+    public String getNom() {
+        return nom;
+    }
+
+
+    public double getMontantReservation(){
+        return reservation.getMontant();
+    }
 }

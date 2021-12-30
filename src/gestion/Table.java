@@ -35,11 +35,20 @@ public class Table implements Comparable<Table>, Serializable {
     public String toString() {
         String s = "("+placeLibre+" places restants) [";
         int nbPersonne=participants.size();
-        for (int i=0; i<(nbPersonne-1); i++){
-            s+=participants.get(i).toString();
+        String acc="";
+        String sep="";
+        for (int i=0; i<(nbPersonne); i++){
+            if(participants.get(i).getNbReservation()>1){
+                acc="+accompagnant";
+            }
+            else{
+                acc="";
+            }
+            s+=sep+participants.get(i).toString()+acc;
+            sep=",";
         }
-        if (0 < nbPersonne)
-            s+=participants.get(nbPersonne).toString();
+       /* if (0 < nbPersonne)
+            s+=participants.get(nbPersonne).toString();*/
         return s + "]";
     }
 

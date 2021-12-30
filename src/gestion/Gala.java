@@ -3,6 +3,7 @@ package gestion;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -138,6 +139,8 @@ public class Gala implements Serializable {
 
     // POUR SAVOIR SI L'INDIVIDU S'EST DEJA INSCRIT OU PAS
     public boolean estInscrit(int id) {
+
+
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
         }
@@ -166,6 +169,7 @@ public class Gala implements Serializable {
     }
 
     public void updateReservation(){
+        Set<Etudiant> rajouter=new HashSet<>();
         int restant=getNbPlaceAcceptationRestant();
         Etudiant sommet;
         int nbPlace;
@@ -181,24 +185,26 @@ public class Gala implements Serializable {
                restant-=nbPlace;
             }
             else{
+                rajouter.add(etudiantAttente.poll());
                 // je dois chercher la personne qui a besoin de nb de place qui reste
+
+            }
+        }
+        if(!rajouter.isEmpty()){
+            for(Etudiant i :rajouter){
+                etudiantAttente.add(i);
             }
         }
 
     }
-    //TODO continuer
-    /*public boolean attenteConfirmation(int id){
-        Individu e= getPersonne(id);
-        if(e.typeIndividu()==Type.ETUDIANT && etudiantAccepte.contains(e) && e.getNumTableReservation()==null){
-            return true;
-        }
-        return false;
-    }*/
+
+
 
     public void enregistrementListeAttente(int num,LocalDate date,int nbPlace){
         Etudiant e=(Etudiant) getPersonne(num);
         etudiantAttente.add(e);
-        e.setReservation(new Reservation(date,0,nbPlace));
+        e.setReservation(new Reservation(date,0,nbPlace,tarifPrincipale(num),TARIF3));
+        System.out.println(etudiantAttente);
     }
 
     public int getIndividu(int id) {
@@ -227,11 +233,11 @@ public class Gala implements Serializable {
         boolean suffisant = false;
         Table t = tables.get(numTable-1);
 
-        System.out.println("laa"+t.getPlaceLibre());
+
 
 
             suffisant = t.getPlaceLibre() >= nbPlace;
-            System.out.println(suffisant);
+
 
 
 
@@ -240,29 +246,17 @@ public class Gala implements Serializable {
 
     }
 
-   /* public Table getTable(int numTable) {
-        Table table = null;
-
-        for (Table t : tables) {
-            if (t.getNumTable() == numTable) {
-
-                table = t;
-                break;
-            }
-        }
-        return table;
-    }*/
 
     public boolean faireReservation(int numTable, int nbPlace, int id, LocalDate date) {
 
         boolean accepte = verificationPlaceEtTable(numTable, nbPlace);
         if (accepte) {
             Individu pers = getPersonne(id);
-            pers.setReservation(new Reservation(date, numTable, nbPlace));
+            pers.setReservation(new Reservation(date, numTable, nbPlace,tarifPrincipale(id),TARIF3));
             Table t = tables.get(numTable-1);
             t.ajoutPersonne(pers, nbPlace);
             System.out.println(pers);
-            System.out.println(t.getPlaceLibre());
+
             return true;
         } else {
             throw new IllegalArgumentException("Il n'y a pas assez de place sur la table " + numTable + " pour votre demande");
@@ -339,8 +333,10 @@ public class Gala implements Serializable {
 
     // LA LISTE DES PERSONNELS DANS LES TABLES DES PERSONNELS
     public String tablePersonnel() {
+
         String s = "Table du personnel: \n";
         s += table(0, 10);
+
         return s;
     }
 
@@ -354,10 +350,69 @@ public class Gala implements Serializable {
 
     // TO STRING DE LISTE DES INDIVIDUS DANS LES TABLES
     private String table(int debut, int fin) {
+
         String s = "";
         for (int i = debut; i < fin; i++) {
+
             s += "Table " + (int) (i + 1) + ": " + tables.get(i) + "\n";
         }
         return s;
+    }
+
+    public boolean attenteConfirmation(int id){
+        Individu i=getPersonne(id);
+        Type t=i.typeIndividu();
+        switch (t){
+            case PERSONNEL -> {return false;}
+            case ETUDIANT -> {
+                if(i.getNumTableReservation()==0 && etudiantAccepte.contains((Etudiant)i)){
+                    return true;
+
+                }
+                return false;
+            }
+            default -> throw new IllegalArgumentException("Id non existante");
+
+        }
+    }
+
+    public boolean aDejaReserve(int id){
+        Individu i=getPersonne(id);
+       return i.getNbReservation()!=0;
+    }
+
+    public int tarifPrincipale(int id){
+
+        Individu i=getPersonne(id);
+        Type t=i.typeIndividu();
+
+        int tarif=0;
+        switch (t){
+            case PERSONNEL -> {
+                tarif=TARIF3;
+                break;
+            }
+            case ETUDIANT -> {
+                Etudiant e=(Etudiant) i;
+                if(e.getAnneeFormation()==5){
+                    tarif=TARIF1;
+
+                }
+                else{
+                    tarif=TARIF2;
+                }
+                break;
+            }
+            default -> throw new IllegalArgumentException("Id inexistant");
+        }
+      return tarif;
+
+
+
+
+    }
+
+    public double montantReservationGala(int id){
+        return getPersonne(id).getMontantReservation();
     }
 }

@@ -26,6 +26,18 @@ public class Etudiant extends Individu implements Serializable {
     }
 
     public int compare(Etudiant e1, Etudiant e2) {
-        return (int) ChronoUnit.DAYS.between(e1.getDateReservation(), e2.getDateReservation());
+        //return (int) ChronoUnit.DAYS.between(e1.getDateReservation(), e2.getDateReservation());
+       if(e1.anneeFormation==5 && e2.anneeFormation==5){
+           return (int) ChronoUnit.DAYS.between(e1.getDateReservation(), e2.getDateReservation());
+       }
+       else if(e1.anneeFormation==5 ){
+           return -1;
+       }
+       else if(e2.anneeFormation==5){
+           return 1;
+       }
+       else{
+           return (int) ChronoUnit.DAYS.between(e1.getDateReservation(), e2.getDateReservation());
+       }
     }
 }
