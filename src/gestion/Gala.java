@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Gala implements Serializable {
@@ -17,12 +18,19 @@ public class Gala implements Serializable {
     private SortedMap<Integer, Individu> individuListe = new TreeMap<>();
     private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
     private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
-    private PriorityQueue<Etudiant> etudiantAttente=new PriorityQueue<>();
+    private Map<Etudiant, Integer> demandeEtudiant = new HashMap<>();
+    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>();
     private SortedSet<Etudiant> etudiantAccepte = new TreeSet<>();
     private List<Table> tables = new ArrayList<>();
-
     private LocalDate dateGala;
 
+
+    /**
+     * Constructeur de Gala
+     * Crée une map  des individus de l'école avec leur identifiants( étudiant et personnel) par lecture des fichiers des étudiants et des personnels
+     * Crée la liste des tables associées aux étudiants et aux personnels
+     * @param date date du Gala
+     */
     public Gala(LocalDate date) {
         dateGala = date;
 
@@ -91,56 +99,41 @@ public class Gala implements Serializable {
         }
 
         //creation des table du personnel et des etudiant
-        for (int i=0; i < TABLE_PERSONNEL; i++) {
+        for (int i = 0; i < TABLE_PERSONNEL; i++) {
             tables.add(new Table());
         }
-        for (int i=0; i < TABLE_ETUDIANT; i++) {
+        for (int i = 0; i < TABLE_ETUDIANT; i++) {
             tables.add(new Table());
         }
     }
 
-    // POUR SAVOIR SI L'INDIVIDU EST BIEN DANS L'ECOLE
+
+    /**
+     * Donne l'individu correspondant à l'id
+     * @param id le numero d'identification de l'individu
+     * @return l'individu dont le numéro d'indentification est passé en paramètre
+     */
+    public Individu getPersonne(int id) {
+        return individuListe.get(id);
+    }
+
+    /**
+     * Verifie si l'individu est bien présent dans l'école
+     * @param type le type de l'individu ( Etudiant ou Personnel)
+     * @param id le numéro d'identification de l'individu
+     * @return true si l'individu est présent dans l'école false sinon
+     */
     public boolean estPresent(Type type, int id) {
-        if (individuListe.containsKey(id) && type == individuListe.get(id).typeIndividu())
-            return true;
-        return false;
+        return individuListe.containsKey(id) && type == individuListe.get(id).typeIndividu();
     }
 
-    // POUR FAIRE L'INSCRIPTION D'UN INDIVIDU DANS LA LISTE DE CE QUI VONT EN SOIREE
-    // RETURN TRUE SI IL EST PRESENT DANS L'ECOLE
 
-    public boolean inscription(int id) {
-        //TODO verifier si le get ne retourne rien, si cela fonctionne
-        if (individuListe.get(id) == null) {
-            throw new IllegalArgumentException("ID INEXISTANT");
-        }
-        switch (individuListe.get(id).getType()) {
-            case 0 -> {
-                if (estPresent(individuListe.get(id).typeIndividu(), id)) {
-                    personnelInscrit.put(id, (Personnel) individuListe.get(id));
-                    System.out.println(personnelInscrit);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            case 1 -> {
-                if (estPresent(individuListe.get(id).typeIndividu(), id)) {
-                    etudiantInscrit.put(id, (Etudiant) individuListe.get(id));
-                    System.out.println(etudiantInscrit);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            default -> throw new NumberFormatException();
-        }
-    }
-
-    // POUR SAVOIR SI L'INDIVIDU S'EST DEJA INSCRIT OU PAS
+    /**
+     * Verifie si l'individu s'est déjà inscrit en verifiant s'il est déjà present dans la liste des inscrits
+     * @param id le numéro d'identification de l'individu
+     * @return true si l'individu s'est déjà inscrit false sinon
+     */
     public boolean estInscrit(int id) {
-
-
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
         }
@@ -151,73 +144,65 @@ public class Gala implements Serializable {
         };
     }
 
-    public int getNbTotalEtudiant(){
-        return TABLE_ETUDIANT*8;
-        // ON DOIT MODIFIER LE 8
-    }
 
-    public int getNbEtudiantAccepte(){
-        int nb=0;
-        for(Etudiant e:etudiantAccepte){
-            nb+=e.getNbReservation();
-        }
-        return nb;
-    }
-
-    public int getNbPlaceAcceptationRestant(){
-        return getNbTotalEtudiant()-getNbEtudiantAccepte();
-    }
-
-    public void updateReservation(){
-        Set<Etudiant> rajouter=new HashSet<>();
-        int restant=getNbPlaceAcceptationRestant();
-        Etudiant sommet;
-        int nbPlace;
-        while(restant>0){
-             sommet=etudiantAttente.peek();
-             if(sommet==null){
-                 break;
-             }
-            nbPlace=sommet.getNbReservation();
-            if(restant>nbPlace){
-                etudiantAccepte.add(sommet);
-                etudiantAttente.poll();
-               restant-=nbPlace;
-            }
-            else{
-                rajouter.add(etudiantAttente.poll());
-                // je dois chercher la personne qui a besoin de nb de place qui reste
-
-            }
-        }
-        if(!rajouter.isEmpty()){
-            for(Etudiant i :rajouter){
-                etudiantAttente.add(i);
-            }
-        }
-
-    }
-
-
-
-    public void enregistrementListeAttente(int num,LocalDate date,int nbPlace){
-        Etudiant e=(Etudiant) getPersonne(num);
-        etudiantAttente.add(e);
-        e.setReservation(new Reservation(date,0,nbPlace,tarifPrincipale(num),TARIF3));
-        System.out.println(etudiantAttente);
-    }
-
-    public int getIndividu(int id) {
+    /**
+     * Inscrit l'individu dans la liste des inscrits pour le gala si il est bien présent dans l'école
+     * @param id le numéro d'identification de l'individu
+     * @return true si l'individu peux s'inscrire et false sinon
+     */
+    public boolean inscription(int id) {
+        //TODO verifier si le get ne retourne rien, si cela fonctionne
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
         }
-        return individuListe.get(id).getType();
+        switch (individuListe.get(id).typeIndividu()) {
+            case PERSONNEL -> {
+                if (estPresent(individuListe.get(id).typeIndividu(), id)) {
+                    personnelInscrit.put(id, (Personnel) individuListe.get(id));
+                    System.out.println(personnelInscrit);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            case ETUDIANT -> {
+                if (estPresent(individuListe.get(id).typeIndividu(), id)) {
+                    etudiantInscrit.put(id, (Etudiant) individuListe.get(id));
+                    System.out.println(etudiantInscrit);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            default -> throw new IllegalArgumentException("id non inexistant");
+        }
     }
 
-    public Individu getPersonne(int id) {
-        return individuListe.get(id);
+
+    /**
+     * Pour savoir si l'individu dont l'id est passé en paramètre a déjà fait une demande ou réservé
+     * @param id le numéro d'identification de l'individu
+     * @return true si l'individu a déja réservé ou a déja fait une demande de réservation, false sinon
+     */
+    public boolean aDejaReserve(int id) {
+        Individu i = getPersonne(id);
+        switch (i.typeIndividu()) {
+            case PERSONNEL -> {
+                return i.getNbReservation() != 0;
+            }
+            case ETUDIANT -> {
+                return demandeEtudiant.containsKey((Etudiant) i);
+            }
+            default -> throw new IllegalArgumentException("id inexistant");
+        }
     }
 
+
+    /**
+     * Renvoie le nombre de place autorisé à l'individu correspondant
+     * @param id le numero d'identification de l'individu
+     * @return le nombre de place autorisé à l'individu
+     */
     public int nbPlaceAutoriseIndividu(int id) {
         Individu pers = getPersonne(id);
         int nb = 2;
@@ -229,190 +214,338 @@ public class Gala implements Serializable {
         return nb;
     }
 
-    public boolean verificationPlaceEtTable(int numTable, int nbPlace) {
-        boolean suffisant = false;
-        Table t = tables.get(numTable-1);
 
-
-
-
-            suffisant = t.getPlaceLibre() >= nbPlace;
-
-
-
-
-
-        return suffisant;
-
-    }
-
-
-    public boolean faireReservation(int numTable, int nbPlace, int id, LocalDate date) {
-
-        boolean accepte = verificationPlaceEtTable(numTable, nbPlace);
-        if (accepte) {
-            Individu pers = getPersonne(id);
-            pers.setReservation(new Reservation(date, numTable, nbPlace,tarifPrincipale(id),TARIF3));
-            Table t = tables.get(numTable-1);
-            t.ajoutPersonne(pers, nbPlace);
-            System.out.println(pers);
-
-            return true;
-        } else {
-            throw new IllegalArgumentException("Il n'y a pas assez de place sur la table " + numTable + " pour votre demande");
-        }
-
-    }
-
+    /**
+     * Donne un numéro de table aléatoire correspondant au type de l'individu et qui a assez de place pour le nombre de place demandé
+     * @param nbPlace le nombre de place demandé
+     * @param t le type de l'individu
+     * @return  un numéro de table qui a assez de place pour le nombre de place souhaité
+     */
     public int getTableAleatoire(int nbPlace, Type t) {
-        int debut = -1;
-        int fin = -1;
-        int numTable=-1;
-
+        int debut ;
+        int fin ;
+        int numTable = -1;
         switch (t) {
             case ETUDIANT -> {
                 debut = 10;
                 fin = 25;
-                break;
+
             }
             case PERSONNEL -> {
                 debut = 0;
                 fin = 10;
-                break;
+
             }
             default -> throw new IllegalArgumentException("Type inexistante");
         }
-
-
         for (int i = debut; i < fin; i++) {
             if (tables.get(i).verificationPlaceSuffisant(nbPlace)) {
-                numTable=i+1;
+                numTable = i + 1;
                 break;
             }
-
         }
         return numTable;
-
-
     }
 
-    //  C4EST RETURN DONC çA NE CONTINUE MEME PAS
-    private boolean desinscription(int id) {
-        switch (individuListe.get(id).getType()) {
-            case 0 -> {
-                for (int i = 0; i < 10; i++) {
-                    if (tables.get(i).retirerParticipant(id)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            case 1 -> {
-                for (Individu e : etudiantAttente) {
-                    if (e.getId() == id) {
-                        etudiantAttente.remove(e);
-                        return true;
-                    }
-                }
-                for (Individu e : etudiantAccepte) {
-                    if (e.getId() == id) {
-                        etudiantAccepte.remove(e);
-                        return true;
-                    }
-                }
-                for (int i = 10; i < 25; i++) {
-                    if (tables.get(i).retirerParticipant(id)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            default -> throw new NumberFormatException();
-        }
-    }
 
-    // LA LISTE DES PERSONNELS DANS LES TABLES DES PERSONNELS
+    /**
+     * Donne le plan de table du personnel: les tables de 1 à 10
+     * @return Un texte sur le plan des tables du personnel
+     */
     public String tablePersonnel() {
-
         String s = "Table du personnel: \n";
         s += table(0, 10);
-
         return s;
     }
 
 
-    //// LA LISTE DES ETUDIANTS DANS LES TABLES DES ETUDIANTS
+    /**
+     *  Donne le plan de table des étudiants: les tables de 11 à 25
+     * @return  Un texte sur le plan des tables des étudiants
+     */
     public String tableEtudiant() {
         String s = "Table des étudiants: \n";
         s += table(10, 25);
         return s;
     }
 
-    // TO STRING DE LISTE DES INDIVIDUS DANS LES TABLES
-    private String table(int debut, int fin) {
 
+    /**
+     * @param debut le numero de table debut inclus ( numero de table -1 )
+     * @param fin le numero de table fin exclus( numero de table -1
+     * @return un texte sur le plan des tables de tout les tables entre le numéro debut et fin
+     */
+    private String table(int debut, int fin) {
         String s = "";
         for (int i = debut; i < fin; i++) {
-
-            s += "Table " + (int) (i + 1) + ": " + tables.get(i) + "\n";
+            s += "Table " +(i + 1) + ": " + tables.get(i) + "\n";
         }
         return s;
     }
 
-    public boolean attenteConfirmation(int id){
-        Individu i=getPersonne(id);
-        Type t=i.typeIndividu();
-        switch (t){
-            case PERSONNEL -> {return false;}
-            case ETUDIANT -> {
-                if(i.getNumTableReservation()==0 && etudiantAccepte.contains((Etudiant)i)){
-                    return true;
 
-                }
-                return false;
-            }
-            default -> throw new IllegalArgumentException("Id non existante");
-
-        }
+    /**
+     * Verifie si la table dont le numéro est passé en paramètre a assez de place pour le nombre de place demandé
+     * @param numTable le numéro de la table
+     * @param nbPlace le nombre de place demandé
+     * @return true si la table correspondant a assez de place pour le nombre de place demandé ,false sinon
+     */
+    public boolean verificationPlaceEtTable(int numTable, int nbPlace) {
+        Table t = tables.get(numTable - 1);
+       return t.getPlaceLibre() >= nbPlace;
     }
 
-    public boolean aDejaReserve(int id){
-        Individu i=getPersonne(id);
-       return i.getNbReservation()!=0;
-    }
 
-    public int tarifPrincipale(int id){
-
-        Individu i=getPersonne(id);
-        Type t=i.typeIndividu();
-
-        int tarif=0;
-        switch (t){
-            case PERSONNEL -> {
-                tarif=TARIF3;
-                break;
-            }
+    /**
+     * Renvoie le tarif correspondant à l'individu dont l'id est passé en paramètre
+     * Si c'est un personnel, le tarif c'est le TARIF3 si c'est un étudiant de dernière année le tarif est le TARIF1 et les autres étudiants ont comme tarif le TARIF2
+     * @param id le numéro d'identification de l'individu
+     * @return le tarif correspondant à l'individu
+     */
+    public int tarifPrincipale(int id) {
+        Individu i = getPersonne(id);
+        Type t = i.typeIndividu();
+        int tarif;
+        switch (t) {
+            case PERSONNEL ->
+                tarif = TARIF3;
             case ETUDIANT -> {
-                Etudiant e=(Etudiant) i;
-                if(e.getAnneeFormation()==5){
-                    tarif=TARIF1;
+                Etudiant e = (Etudiant) i;
+                if (e.getAnneeFormation() == 5) {
+                    tarif = TARIF1;
+                } else {
+                    tarif = TARIF2;
+                }
 
-                }
-                else{
-                    tarif=TARIF2;
-                }
-                break;
             }
             default -> throw new IllegalArgumentException("Id inexistant");
         }
-      return tarif;
-
-
-
-
+        return tarif;
     }
 
-    public double montantReservationGala(int id){
+
+    /**
+     * Enregistre la réservation de l'individu dont l'id est passé en paramètre
+     * Si il y a assez de place dans la table choisie, on enregistre la réservation et on ajoute l'individu à la liste des participants sur la table correspondante
+     * @param numTable le numéro de la table
+     * @param nbPlace le nombre de place demandé
+     * @param id le numéro d'indentification de la personne
+     * @param date la date de réservation
+     * @throw IllegalArgumentException si la table choisi n'a pas assez de place pour le nombre de place souhaité
+     * @return true si la reservation c'est bien passée
+     */
+    public boolean faireReservation(int numTable, int nbPlace, int id, LocalDate date) {
+        boolean accepte = verificationPlaceEtTable(numTable, nbPlace);
+        if (accepte) {
+            Individu pers = getPersonne(id);
+            pers.setReservation(new Reservation(date, numTable, nbPlace, tarifPrincipale(id), TARIF3));
+            Table t = tables.get(numTable - 1);
+            t.ajoutPersonne(pers, nbPlace);
+            System.out.println(pers);
+            return true;
+        } else {
+            throw new IllegalArgumentException("Il n'y a pas assez de place sur la table " + numTable + " pour votre demande");
+        }
+    }
+
+    /**
+     * Donne le montant de la réservation de l'individu dont l'id est passé en paramètre
+     * @param id le numéro d'identification de l'individu
+     * @return le montant de la réservation de l'individu
+     */
+    public double montantReservationGala(int id) {
         return getPersonne(id).getMontantReservation();
     }
+
+
+    /**
+     * On enregistre l'étudiant dans la liste d'attente
+     * On ajoute l'étudiant dans la liste d'attente
+     * On enregistre la demande de la l'étudiant avec le nombre de place souhaité
+     * @param num le numéro d'identifiant de l'étudiant
+     * @param  nbPlace le nombre de place souhaité par l'étudiant
+     */
+    public void enregistrementListeAttente(int num,int nbPlace) {
+        Etudiant e = (Etudiant) getPersonne(num);
+        etudiantAttente.add(e);
+        demandeEtudiant.put(e, nbPlace);
+        System.out.println(etudiantAttente);
+    }
+
+
+    /**
+     * Donne le nombre de place reservé aux  étudiants à la soirée
+     * * @return le nombre total des étudiants et de ses accompagnants pouvant venir à la soirée
+     */
+    public int getNbTotalEtudiant() {
+        return TABLE_ETUDIANT * 8;
+        // ON DOIT MODIFIER LE 8
+    }
+
+
+    /**
+     * Donne le nombre des étudiants dont la réservation ou la demande de réservation est acceptée
+     * @return le nombre de place qui ont déjà été distribué et ceux dont la demande ont déjà été accepté
+     */
+    public int getNbEtudiantAccepte() {
+        int nb = 0;
+        for (Etudiant e : etudiantAccepte) {
+            if(e.getNbReservation()!=0)
+            {
+                nb += e.getNbReservation();
+            }
+            else{
+                nb+=demandeEtudiant.get(e);
+            }
+        }
+        return nb;
+    }
+
+
+    /**
+     * Donne le nombre de place qu'on puisse distribué pour les étudiants
+     * @return le nombre de place restant qui peut être distribué pour les étudiants
+     */
+    public int getNbPlaceAcceptationRestant() {
+        return getNbTotalEtudiant() - getNbEtudiantAccepte();
+    }
+
+
+    /**
+     * Met à jour les demandes de réservations acceptées
+     * Si les places sont suffisants, on accepte la demande de réservation de l'étudiant qui est au sommet de la queue
+     * Si le nombre de place demandé par l'étudiant au sommet est supérieur au nombre de place restant, on regarde la demande l'étudiant suivant
+     * Quand on accepte la demande de réservation de l'étudiant : on l'ajoute dans la liste des étudiants acceptés et on attend sa confirmation
+     */
+    public void updateReservation() {
+        Set<Etudiant> rajouter = new HashSet<>();
+        int restant=getNbPlaceAcceptationRestant() ;
+        Etudiant sommet;
+        int nbPlace;
+        while (restant> 0) {
+            sommet = etudiantAttente.peek();
+            if (sommet == null) {
+                break;
+            }
+            nbPlace = demandeEtudiant.get(sommet);
+            if (restant > nbPlace) {
+                etudiantAccepte.add(sommet);
+                etudiantAttente.poll();
+            } else {
+                rajouter.add(etudiantAttente.poll());
+                // je dois chercher la personne qui a besoin de nb de place qui reste
+            }
+            restant=getNbPlaceAcceptationRestant();
+        }
+        if (!rajouter.isEmpty()) {
+            etudiantAttente.addAll(rajouter);
+        }
+    }
+
+
+    /**
+     * Donne le nombre de place que l'étudiant a demandé lors de sa demande de réservation
+     * @param id le numéro d'identification de l'individu
+     * @return le nombre de place demandé par l'étudiant lors de sa demande
+     */
+    public int getNbDemande(int id) {
+        Etudiant e=(Etudiant)getPersonne(id);
+        return demandeEtudiant.get(e);
+    }
+
+
+    /**
+     * Pour savoir si l'individu dont l'id est passé en paramètre est en attente de confirmation de sa réservation
+     * Si c'est un étudiant dont la demande vient d'être acceptée,il est en attente de confirmation ; tout les autres ne sont pas concernés
+     * @param id le numéro d'indentification de l'individu
+     * @return true si la demande de l'étudiant a été accepté et on attend la confirmation de sa réservation, false sinon
+     */
+    public boolean attenteConfirmation(int id) {
+        Individu i = getPersonne(id);
+        Type t = i.typeIndividu();
+        switch (t) {
+            case PERSONNEL -> {
+                return false;
+            }
+            case ETUDIANT -> {
+                return i.getNbReservation() == 0 && etudiantAccepte.contains((Etudiant) i);
+            }
+            default -> throw new IllegalArgumentException("Id non existante");
+        }
+    }
+
+
+    /**
+     * Annule la réservation faite par l'individu dont l'identifiant est passé en paramètre
+     * Il est retiré de la liste des participants sur la table de sa réservation et sa reservation est annulée
+     * @param id le numéro d'indentification de l'individu
+     * @return true si la réservation est bien annulé, false sinon
+     */
+    public boolean annulationReservation(int id) {
+        Individu ind = getPersonne(id);
+        if (ind.getNbReservation() != 0) {
+            int numTable = ind.getNumTableReservation();
+            tables.get(numTable - 1).retirerParticipant(id, ind.getNbReservation());
+            ind.annulerReservationInd();
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Desinscrit l'individu dont le numéro est en paramètre
+     * Si la date où il souhaite se désinscrire est avant les 10 derniers jours avant le Gala, on le désinscrit
+     * Si c'est un personnel, on le supprime de la liste des personnels inscrits
+     * Si c'est un étudiant, on le supprime de la liste des étudiants acceptés,de la demande de réservation, de la liste d'attente et des étudiants inscrits
+     * @param id  le numéro d'indentification de l'individu
+     * @param date la date où l'individu souhaite se désinscrire
+     * @throw IllegalArgumentException si il souhaite se désinscrire dans les 10 jours avant le Gala
+     * @return true si la désinscription s'est bien passé
+     */
+    public boolean desinscription(int id, LocalDate date) {
+        if (ChronoUnit.DAYS.between(date, dateGala) >= 10) {
+            Individu ind = getPersonne(id);
+            annulationReservation(id);
+            switch (ind.typeIndividu()) {
+                case PERSONNEL -> {
+                    personnelInscrit.remove(id);
+                    System.out.println(personnelInscrit.containsKey(id) + " " + ind);
+
+                }
+                case ETUDIANT -> {
+                    etudiantAccepte.remove((Etudiant)ind);
+                    demandeEtudiant.remove((Etudiant)ind);
+                    etudiantAttente.remove((Etudiant)ind);
+                    etudiantInscrit.remove(id);
+                    System.out.println(etudiantAccepte.contains(ind) + " " + demandeEtudiant.containsKey(ind) + " " + etudiantAttente.contains(ind) + " " + etudiantInscrit.containsKey(id) + " " + ind);
+
+                }
+                default -> throw new NumberFormatException();
+            }
+            return true;
+        } else {
+            throw new IllegalArgumentException("Vous ne pouvez plus vous desinscrire");
+        }
+    }
+
+
+    /**
+     * Un texte pour avoir l'état du gala
+     * @return un texte de l'état du gala
+     */
+    @Override
+    public String toString() {
+        return "Gala du " + dateGala +
+                "\n Liste des individus dans l'école : \n"
+               + individuListe +
+                "\n Liste des etudiants inscrits : \n" + etudiantInscrit +
+                "\n Liste des personnels inscrits : \n" + personnelInscrit +
+                "\n Liste des étudiants qui ont fait des demandes de reservations : \n" + demandeEtudiant +
+                "\n Liste d'attente des étudiants : \n "+ etudiantAttente +
+                "\n Liste des étudiants acceptés : \n " + etudiantAccepte +
+                "\n Liste des tables \n" + tables+
+                "\n------------------------------\n";
+    }
+
 }

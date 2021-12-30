@@ -6,57 +6,78 @@ import java.util.Scanner;
 public class Ihm {
     Scanner sc = new Scanner(System.in);
 
+
+    /**
+     * Montre à l'utilisateur l'état du gala
+     * @param s Un texte de l'etat de gala
+     */
+    public void etatGala(String s){
+        System.out.println("ETAT DU GALA \n"+s);
+    }
+
+
+    /**
+     * On demande à l'utilisateur si c'est un étudiant ou un personnel
+     * @return le type de l'individu
+     */
     public Type etudiantOuPersonnel() {
         System.out.print("Si vous êtes du personnel [0] | Si vous êtes un etudiant [1] | quitter [q]");
         while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                int choix = sc.nextInt();
-                if(choix==0)
-                    return Type.PERSONNEL;
-                if(choix==1)
-                    return Type.ETUDIANT;
-
-                System.out.println("probléme d'identification");
-            }
-            if (sc.hasNext()){
-                if(sc.next().equals("q"))
-                    return null;
-
-                System.out.println("probléme d'identification");
-
-            }
-
+            String choix = sc.next();
+            if (choix.equals("0"))
+                return Type.PERSONNEL;
+            if (choix.equals("1"))
+                return Type.ETUDIANT;
+            if (choix.equals("q"))
+                return null;
+            System.out.println("probléme d'identification");
         }
         return null;
     }
 
+
+
+    /**
+     * Demande le numéro d'indentification de l'utilisateur
+     * @return le numero de l'utilisateur
+     */
     public int demanderNumero(){
         System.out.print("Veuillez entrer votre identifiant | pour quitter [q]");
         while(sc.hasNext()){
-            if(sc.hasNextInt())
-                return sc.nextInt();
-            if(sc.next().equals("q"))
+            String choix = sc.next();
+            if(choix.equals("q"))
                 return 0;
-            System.out.println("entrée un numéro d'identification");
+            return Integer.parseInt(choix);
         }
         return 0;
     }
 
+
+    /**
+     * Demande à l'utilisateur s'il veut s'inscrire ou bien quitter
+     * @return true si l'utilisatuer veut s'inscrire false sinon
+     */
     public boolean quitOuInscription(){
         System.out.print("s'inscrire [1] | quitter [q]");
         while(sc.hasNext()){
-            if(sc.hasNextInt()){
-                if(sc.nextInt()==1)
+            String res = sc.next();
+            if(res.equals("1")){
                 return true;
             }
-
-            if(sc.next().equals("q"))
+            if(res.equals("q"))
                 return false;
             System.out.println("probléme de saisie");
         }
         return false;
     }
 
+    /**
+     * Affiche le menu correspondant à l'utilisateur
+     * S'il est en attente de confirmation, un sous menu pour confirmer sa demande est ajouté
+     * L'utilisateur choisit son sous-menu
+     * @param sup boolean qui marque si l'utilisateur est en attente de confirmation ou pas
+     * @return le choix du menu
+     */
     public int choixMenu(boolean sup){
         int c=-1;
         String s="Menu\n1 – Gérer les places du dîner \n2 – Se désinscrire \n3 – Quitter\n";
@@ -64,9 +85,8 @@ public class Ihm {
             s+="4-Confirmation réservation\n";
         }
         s+="Votre choix :";
-        boolean pasBonneReponse=true;
-        while(pasBonneReponse){
-            System.out.print(s);
+        System.out.print(s);
+        while(sc.hasNext()){
             if(sc.hasNextInt()){
                 c=sc.nextInt();
                 if(c==1 || c==2 ) {
@@ -80,87 +100,145 @@ public class Ihm {
                     break;
                 }
             }
-            else {
-                sc.next();
-            }
+            System.out.println(s);
         }
         return c;
     }
 
-    public void afficheNbReservationEt(int place){
-        System.out.println("Vous avez reservé "+place+" places");
+
+    /**
+     * Affiche la synthèse de la réservation effectué par l'utilisateur
+     * @param nom le nom de l'utilisateur
+     * @param nbPlace le nombre de place réservé
+     * @param numTable le numéro de la table réservé
+     */
+    public void afficheSyntheseReservation(String nom, int nbPlace, int numTable){
+        String s=nom+" a effectué une reservation de "+nbPlace+" place(s) à la table n°"+numTable;
+        System.out.println(s);
     }
 
+
+    /**
+     * Affiche la synthèse de la demande effectué par l'utilisateur
+     * @param nom le nom de l'utilisateur
+     * @param nbPlace le nombre de place que l'utilisateur souhaite
+     */
+    public void afficheSyntheseReservation(String nom, int nbPlace){
+        String s=nom+" a effectué une reservation de "+nbPlace+" place(s) ";
+        System.out.println(s);
+    }
+
+
+    /**
+     * Affiche le nombre de place que l'utilisateur peut demander
+     * @param autorise le nombre de place que l'utilisateur peut demander
+     */
     public void affichageNbPlacePossible(int autorise){
         System.out.println("Vous avez droit à "+autorise+" places");
     }
 
-    public int OuiOuNonPlanTable(){
-        int choix=-1;
-        boolean pasBonneReponse = true;
-        while (pasBonneReponse) {
+
+    /**
+     * Demande à l'utilisateur s'il veut visionner le plan de table
+     * @return true si l'utilisateur veut visionner le plan de table, false sinon
+     */
+    public boolean OuiOuNonPlanTable(){
+        while (sc.hasNext()) {
             System.out.print("Voulez vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
             if (sc.hasNextInt()) {
-                choix = sc.nextInt();
-                if (choix == 1 || choix == 2) {
-                    pasBonneReponse=false;
-                }
-            } else {
-                if (sc.next().equals("q")) {
-                    return -1;
+                if (sc.nextInt() == 1) {
+                    return true;
+                } else if (sc.nextInt() == 2) {
+                    return false;
                 }
             }
         }
-        return choix;
+        return false;
     }
 
-    public int demandeTable(String table,Type t){
 
-        String s="";
+    /**
+     * Demande le numéro de la table de l'utilisateur
+     * @param table le plan de table correspondant au type de l'utilisateur
+     * @param t le type de l'utilisateur
+     * @return le numéro de la table choisi par l'utilisateur
+     */
+    public int demandeTable(String table,Type t){
+        String s=table;
         if(t==Type.PERSONNEL){
-            s="Choisissez entre les tables 1 - 10";
+            s+="Choisissez entre les tables 1 - 10";
         }
         else{
-            s="Choisissez entre les tables 11 - 25";
+            s+="Choisissez entre les tables 11 - 25";
         }
-
         int choix=-1;
-        boolean pasBonneReponse = true;
-        while (pasBonneReponse) {
+        while (sc.hasNext()) {
             System.out.print(s+"\nVotre choix :");
             if (sc.hasNextInt()) {
-
                 choix = sc.nextInt();
                 if ((t==Type.ETUDIANT && choix>=11 && choix<=25) || (t==Type.PERSONNEL && choix>=1 && choix<=10)){
-                    pasBonneReponse=false;
-                }
-            } else {
-                if (sc.next().equals("q")) {
-                    return -1;
+                    break;
                 }
             }
         }
         return choix;
     }
 
+
+    /**
+     * Demande à l'utilisateur de nombre de place qu'il souhaite réserver
+     * @param autorise le nombre de place autorisé pour l'utilisateur
+     * @return le nombre de place que l'utilisateur souhaite
+     */
     public int demandeNbPlace(int autorise){
         int choix=-1;
-        boolean pasBonneReponse = true;
-        while (pasBonneReponse) {
-            System.out.print("Vous avez droit jusqu'à "+autorise+" places "+"\nVotre choix :");
+        while (sc.hasNext()) {
+            System.out.print("Vous avez droit jusqu'à " + autorise + " places " + "\nVotre choix :");
             if (sc.hasNextInt()) {
                 choix = sc.nextInt();
-                if (choix>0 && choix<=autorise){
-                    pasBonneReponse=false;
-                }
-            } else {
-                if (sc.next().equals("q")) {
-                    return -1;
+                if (choix > 0 && choix <= autorise) {
+                    break;
                 }
             }
         }
         return choix;
     }
+
+
+    /**
+     * Affiche à l'utilisateur le montant de sa réservation
+     * @param montant le montant de la réservation
+     * @param nbPlace le nombre de place réservé
+     */
+    public void afficheMontant(double montant,int nbPlace){
+        String s="Le montant à payer pour "+nbPlace+" place(s): "+montant;
+        System.out.println(s);
+    }
+
+
+    /**
+     * Affiche le nombre de place que l'utilisateur a choisi
+     * @param place le nombre de place que l'utilisateur a réservé
+     */
+    public void afficheNbReservationEt(int place){
+        System.out.println("Vous avez reservé "+place+" places");
+    }
+
+
+    /**
+     * Affiche le message d'erreur
+     * @param s le message d'erreur
+     */
+    public void afficheErreur(String s){
+        System.out.println(s);
+    }
+
+
+
+
+
+
+
    /* public LocalDate dateAujourdhui(){
         System.out.print("Date d'aujourd'hui :");
         System.out.println("Saisissez une date (JJ/MM/AAAA) :");
@@ -196,86 +274,10 @@ public class Ihm {
         return null;
     }*/
 
-    public void afficheMontant(double montant,int nbPlace){
-        String s="Le montant à payer pour "+nbPlace+" : "+montant;
-        System.out.println(s);
 
-    }
 
-    public void afficheSyntheseReservation(String nom, int nbPlace, int numTable){
-        String s=nom+" a effectué une reservation de "+nbPlace+" place(s) à la table n°"+numTable;
-        System.out.println(s);
-    }
-    public void afficheSyntheseReservation(String nom, int nbPlace){
-        String s=nom+" a effectué une reservation de "+nbPlace+" place(s) ";
-        System.out.println(s);
-    }
-    public void afficheSyntheseReservation(int nb){
-        // a completer
-    }
-    /**
-     * méthode demanderNumero()
-     * Cette méthode permet de récupérer le numéro étudiant ou du personnel qui réalise l'inscription
-     * @return numero pour comparer avec la liste des Individus pouvant s'inscrire
-     */
 
-   /* public int demanderNumero() {
-        int numero = 0;
-        while (identite.hasNext()) {
-            System.out.println("Entrez votre id personnel ou votre numéro étudiant: ");
-            numero = identite.nextInt();
-            if (Integer.toString(numero).length() == 7 || Integer.toString(numero).length() == 4) {
-                return numero;
-            }
-        }
-        return numero;
-    }*/
 
-    /**
-     * méthode InscrireOuQuitter()
-     * Cette méthode permet de s'inscrire ou d'abandonner l'inscription
-     * @return 1 ou 2 en fonction de si l'utilisateur veut s'inscrire ou non
-     */
 
-    /*public int InscrireOuQuitter() {
-        int continuer = 0;
-        while (identite.hasNext()) {
-            System.out.println("Souhaitez-vous vous inscrire (1) ou quitter l'inscription (0)?");
-            continuer = identite.nextInt();
-            if (continuer == 1) {
-                return 1;
-            } else if (continuer == 0) {
-                return 0;
-            }
-        }
-        return continuer;
-    }*/
 
-    /**
-     * méthode afficherMenu()
-     * Cette méthode permet d'afficher les places du diner, se désinscrire ou quitter
-     * @return 0 pour afficher les places du diner, 1 pour se désinscrire avec confirmation et 2 pour quitter
-     */
-
-   /* public int afficherMenu() {
-        int menu = -1;
-        Scanner sc = new Scanner(System.in);
-        while (identite.hasNext()) {
-            menu = identite.nextInt();
-            if (menu == 0) {
-                return 0;
-            } else if (menu == 1) {
-                if (sc.hasNext()) {
-                    System.out.println("Etes-vous sur de vous désinscrire (oui / non?");
-                    String validationDesinscription = sc.next();
-                    if (validationDesinscription == "oui") {
-                        return 1;
-                    }
-                }
-            } else if (menu == 2) {
-                return 2;
-            }
-        }
-        return menu;
-    }*/
 }
