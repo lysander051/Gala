@@ -63,10 +63,7 @@ public class Controleur {
 
     public void Menu(){
         int menu= ihm.choixMenu(gala.attenteConfirmation(idIndividu));
-
-
         if(menu==1){
-
             gererPlace();
             // gerer place
         }

@@ -139,8 +139,6 @@ public class Gala implements Serializable {
 
     // POUR SAVOIR SI L'INDIVIDU S'EST DEJA INSCRIT OU PAS
     public boolean estInscrit(int id) {
-
-
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
         }
@@ -195,10 +193,7 @@ public class Gala implements Serializable {
                 etudiantAttente.add(i);
             }
         }
-
     }
-
-
 
     public void enregistrementListeAttente(int num,LocalDate date,int nbPlace){
         Etudiant e=(Etudiant) getPersonne(num);
@@ -232,23 +227,11 @@ public class Gala implements Serializable {
     public boolean verificationPlaceEtTable(int numTable, int nbPlace) {
         boolean suffisant = false;
         Table t = tables.get(numTable-1);
-
-
-
-
             suffisant = t.getPlaceLibre() >= nbPlace;
-
-
-
-
-
         return suffisant;
-
     }
 
-
     public boolean faireReservation(int numTable, int nbPlace, int id, LocalDate date) {
-
         boolean accepte = verificationPlaceEtTable(numTable, nbPlace);
         if (accepte) {
             Individu pers = getPersonne(id);
@@ -261,14 +244,12 @@ public class Gala implements Serializable {
         } else {
             throw new IllegalArgumentException("Il n'y a pas assez de place sur la table " + numTable + " pour votre demande");
         }
-
     }
 
     public int getTableAleatoire(int nbPlace, Type t) {
         int debut = -1;
         int fin = -1;
         int numTable=-1;
-
         switch (t) {
             case ETUDIANT -> {
                 debut = 10;
@@ -282,18 +263,13 @@ public class Gala implements Serializable {
             }
             default -> throw new IllegalArgumentException("Type inexistante");
         }
-
-
         for (int i = debut; i < fin; i++) {
             if (tables.get(i).verificationPlaceSuffisant(nbPlace)) {
                 numTable=i+1;
                 break;
             }
-
         }
         return numTable;
-
-
     }
 
     //  C4EST RETURN DONC çA NE CONTINUE MEME PAS
@@ -372,7 +348,6 @@ public class Gala implements Serializable {
                 return false;
             }
             default -> throw new IllegalArgumentException("Id non existante");
-
         }
     }
 
@@ -406,10 +381,6 @@ public class Gala implements Serializable {
             default -> throw new IllegalArgumentException("Id inexistant");
         }
       return tarif;
-
-
-
-
     }
 
     public double montantReservationGala(int id){
