@@ -28,7 +28,7 @@ public class Controleur {
             }
             else {
                 this.gala = (Gala)stockage.charger();
-                miseAJourEtudiant(LocalDate.of(2021,11,20),date);
+                miseAJourEtudiant(LocalDate.of(2021,11,30),date);
                 ihm.etatGala(gala.toString());
             }
         }
@@ -45,7 +45,7 @@ public class Controleur {
      * @param dateGala date du Gala
      */
     private void miseAJourEtudiant(LocalDate dateNow,LocalDate dateGala){
-        if(ChronoUnit.MONTHS.between(dateNow,dateGala)<=1){
+        if(ChronoUnit.DAYS.between(dateNow,dateGala)<=31 ){
             gala.updateReservation();
         }
     }

@@ -19,23 +19,7 @@ public class Gala implements Serializable {
     private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
     private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
     private Map<Etudiant, Integer> demandeEtudiant = new HashMap<>();
-    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>(50, new Comparator<Etudiant>() {
-        @Override
-        public int compare(Etudiant o1, Etudiant o2) {
-            if(o1.getAnneeFormation()==5 && o2.getAnneeFormation()==5){
-                return 0;
-            }
-            else if(o1.getAnneeFormation()==5 ){
-                return -1;
-            }
-            else if(o2.getAnneeFormation()==5){
-                return 1;
-            }
-            else{
-                return -1;
-            }
-        }
-    });
+    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>(new ComparateurAnnee());
     private SortedSet<Etudiant> etudiantAccepte = new TreeSet<>();
     private List<Table> tables = new ArrayList<>();
     private LocalDate dateGala;
@@ -414,6 +398,7 @@ public class Gala implements Serializable {
                 nb+=demandeEtudiant.get(e);
             }
         }
+        System.out.println("place accepté"+nb);
         return nb;
     }
 
@@ -424,6 +409,7 @@ public class Gala implements Serializable {
      */
     public int getNbPlaceAcceptationRestant() {
         return getNbTotalEtudiant() - getNbEtudiantAccepte();
+        //return 5-getNbEtudiantAccepte();  POUR FAIRE UN EXEMPLE
     }
 
 
@@ -439,12 +425,14 @@ public class Gala implements Serializable {
 
         int nbPlace;
         while (restant> 0) {
+            System.out.println("restant "+restant);
             Etudiant sommet= etudiantAttente.poll();
             if (sommet == null) {
                 break;
             }
             nbPlace = demandeEtudiant.get(sommet);
-            if (restant > nbPlace) {
+            System.out.println(sommet.getNom()+"  nb place "+nbPlace);
+            if (restant >= nbPlace) {
                 etudiantAccepte.add(sommet);
             } else {
                 rajouter.add(sommet);
