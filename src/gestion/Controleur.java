@@ -34,8 +34,14 @@ public class Controleur {
     public void identification() {
         int id=0;
         Type type = ihm.etudiantOuPersonnel();
+        if(type==null)
+            System.exit(0);
         while(true) {
+            try{
             id = ihm.demanderNumero();
+            }catch(NumberFormatException e){
+                System.out.println("Le numéro ne comporte que des chiffres");
+            }
             if (gala.estPresent(type, id))
                 break;
             System.out.println("le numéro d'identification n'éxiste pas");

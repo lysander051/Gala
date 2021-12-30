@@ -24,11 +24,11 @@ public class Ihm {
     public int demanderNumero(){
         System.out.print("Veuillez entrer votre identifiant | pour quitter [q]");
         while(sc.hasNext()){
-            if(sc.hasNextInt())
-                return sc.nextInt();
-            if(sc.next().equals("q"))
+            String choix = sc.next();
+            if(choix
+                    .equals("q"))
                 return 0;
-            System.out.println("entrée un numéro d'identification");
+            return Integer.parseInt(choix);
         }
         return 0;
     }
