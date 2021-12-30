@@ -109,6 +109,19 @@ public class Table implements Comparable<Table>, Serializable {
 
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return numTable == table.numTable;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numTable);
+    }
+
+    @Override
     public String toString() {
         String s = "("+placeLibre+" places restants) [";
         int nbPersonne=participants.size();

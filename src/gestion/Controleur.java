@@ -28,7 +28,7 @@ public class Controleur {
             }
             else {
                 this.gala = (Gala)stockage.charger();
-                miseAJourEtudiant(LocalDate.now(),date);
+                miseAJourEtudiant(LocalDate.of(2021,11,20),date);
                 ihm.etatGala(gala.toString());
             }
         }
@@ -65,6 +65,9 @@ public class Controleur {
         while(true) {
             try{
                 id = ihm.demanderNumero();
+                if(id==0){
+                    System.exit(0);
+                }
             }catch(NumberFormatException e){
                 System.out.println("Le numéro ne comporte que des chiffres");
             }
@@ -162,11 +165,11 @@ public class Controleur {
             switch (pers.typeIndividu()) {
                 case PERSONNEL -> {
                     gererPlacePersonnel();
-                    return;
+
                 }
                 case ETUDIANT -> {
                     gererPlaceEtudiant();
-                    return;
+
                 }
                 default -> throw new IllegalArgumentException("Type inexistant");
             }

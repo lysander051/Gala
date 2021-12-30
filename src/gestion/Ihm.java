@@ -80,6 +80,7 @@ public class Ihm {
      */
     public int choixMenu(boolean sup){
         int c=-1;
+        String res="";
         String s="Menu\n1 – Gérer les places du dîner \n2 – Se désinscrire \n3 – Quitter\n";
         if(sup){
             s+="4-Confirmation réservation\n";
@@ -87,22 +88,20 @@ public class Ihm {
         s+="Votre choix :";
         System.out.print(s);
         while(sc.hasNext()){
-            if(sc.hasNextInt()){
-                c=sc.nextInt();
-                if(c==1 || c==2 ) {
+                res=sc.next();
+                if(res.equals("1") || res.equals("2") ) {
                     break;
                 }
-                if(c==3){
+                if(res.equals("3")){
                     c=-1;
                     break;
                 }
-                if(sup && c==4){
+                if(sup && res.equals("4")){
                     break;
                 }
-            }
             System.out.println(s);
         }
-        return c;
+        return Integer.parseInt(res);
     }
 
 
@@ -143,15 +142,17 @@ public class Ihm {
      * @return true si l'utilisateur veut visionner le plan de table, false sinon
      */
     public boolean OuiOuNonPlanTable(){
-        while (sc.hasNext()) {
-            System.out.print("Voulez vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
-            if (sc.hasNextInt()) {
-                if (sc.nextInt() == 1) {
-                    return true;
-                } else if (sc.nextInt() == 2) {
-                    return false;
-                }
+        System.out.print("Voulez vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
+        while(sc.hasNext()){
+
+            String res = sc.next();
+            if(res.equals("1")){
+                return true;
             }
+            if(res.equals("2")) {
+                return false;
+            }
+            System.out.print("1- Oui \n 2- Non\nVotre choix :");
         }
         return false;
     }
@@ -172,14 +173,16 @@ public class Ihm {
             s+="Choisissez entre les tables 11 - 25";
         }
         int choix=-1;
+        System.out.print(s+"\nVotre choix :");
         while (sc.hasNext()) {
-            System.out.print(s+"\nVotre choix :");
-            if (sc.hasNextInt()) {
-                choix = sc.nextInt();
+            String res=sc.next();
+            if(res.matches("[0-9][0-9]")) {
+                choix = Integer.parseInt(res);
                 if ((t==Type.ETUDIANT && choix>=11 && choix<=25) || (t==Type.PERSONNEL && choix>=1 && choix<=10)){
                     break;
                 }
             }
+            System.out.print("Erreur, votre choix :");
         }
         return choix;
     }
@@ -192,15 +195,18 @@ public class Ihm {
      */
     public int demandeNbPlace(int autorise){
         int choix=-1;
+        System.out.print("Vous avez droit jusqu'à " + autorise + " places " + "\nVotre choix :");
         while (sc.hasNext()) {
-            System.out.print("Vous avez droit jusqu'à " + autorise + " places " + "\nVotre choix :");
-            if (sc.hasNextInt()) {
-                choix = sc.nextInt();
-                if (choix > 0 && choix <= autorise) {
-                    break;
+            String res=sc.next();
+
+                if(res.matches("[0-9]")) {
+                    choix = Integer.parseInt(res);
+                    if (choix > 0 && choix <= autorise) {
+                        break;
+                    }
                 }
+            System.out.print("Erreur, votre choix :");
             }
-        }
         return choix;
     }
 

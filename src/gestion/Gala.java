@@ -19,7 +19,23 @@ public class Gala implements Serializable {
     private SortedMap<Integer, Etudiant> etudiantInscrit = new TreeMap<>();
     private SortedMap<Integer, Personnel> personnelInscrit = new TreeMap<>();
     private Map<Etudiant, Integer> demandeEtudiant = new HashMap<>();
-    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>();
+    private PriorityQueue<Etudiant> etudiantAttente = new PriorityQueue<>(50, new Comparator<Etudiant>() {
+        @Override
+        public int compare(Etudiant o1, Etudiant o2) {
+            if(o1.getAnneeFormation()==5 && o2.getAnneeFormation()==5){
+                return 0;
+            }
+            else if(o1.getAnneeFormation()==5 ){
+                return -1;
+            }
+            else if(o2.getAnneeFormation()==5){
+                return 1;
+            }
+            else{
+                return -1;
+            }
+        }
+    });
     private SortedSet<Etudiant> etudiantAccepte = new TreeSet<>();
     private List<Table> tables = new ArrayList<>();
     private LocalDate dateGala;
@@ -420,19 +436,18 @@ public class Gala implements Serializable {
     public void updateReservation() {
         Set<Etudiant> rajouter = new HashSet<>();
         int restant=getNbPlaceAcceptationRestant() ;
-        Etudiant sommet;
+
         int nbPlace;
         while (restant> 0) {
-            sommet = etudiantAttente.peek();
+            Etudiant sommet= etudiantAttente.poll();
             if (sommet == null) {
                 break;
             }
             nbPlace = demandeEtudiant.get(sommet);
             if (restant > nbPlace) {
                 etudiantAccepte.add(sommet);
-                etudiantAttente.poll();
             } else {
-                rajouter.add(etudiantAttente.poll());
+                rajouter.add(sommet);
                 // je dois chercher la personne qui a besoin de nb de place qui reste
             }
             restant=getNbPlaceAcceptationRestant();
