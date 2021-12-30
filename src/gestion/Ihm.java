@@ -9,19 +9,14 @@ public class Ihm {
     public Type etudiantOuPersonnel() {
         System.out.print("Si vous êtes du personnel [0] | Si vous êtes un etudiant [1] | quitter [q]");
         while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                int choix = sc.nextInt();
-                if(choix==0)
-                    return Type.PERSONNEL;
-                if(choix==1)
-                    return Type.ETUDIANT;
-                System.out.println("probléme d'identification");
-            }
-            if (sc.hasNext()){
-                if(sc.next().equals("q"))
-                    return null;
-                System.out.println("probléme d'identification");
-            }
+            String choix = sc.next();
+            if (choix.equals("0"))
+                return Type.PERSONNEL;
+            if (choix.equals("1"))
+                return Type.ETUDIANT;
+            if (choix.equals("q"))
+                return null;
+            System.out.println("probléme d'identification");
         }
         return null;
     }

@@ -10,26 +10,19 @@ public class Controleur {
     private int idIndividu;
     private ServiceStockage stockage;
 
-
     public Controleur(LocalDate date) {
         try {
             stockage=new ServiceStockage();
             File fichGala = new File("./gala.ser");
-            System.out.println(fichGala.exists());
             this.ihm = new Ihm();
             if(fichGala.length()==0){
-
                 this.gala = new Gala(date);
                 stockage.enregistrer(gala);
             }
             else {
-
                 this.gala = (Gala)stockage.charger();
                 miseAJourEtudiant(LocalDate.now(),date);
-
             }
-
-
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -41,9 +34,6 @@ public class Controleur {
     public void identification() {
         int id=0;
         Type type = ihm.etudiantOuPersonnel();
-        if(type==null){
-            System.exit(0);
-        }
         while(true) {
             id = ihm.demanderNumero();
             if (gala.estPresent(type, id))
