@@ -15,17 +15,13 @@ public class Ihm {
                     return Type.PERSONNEL;
                 if(choix==1)
                     return Type.ETUDIANT;
-
                 System.out.println("probléme d'identification");
             }
             if (sc.hasNext()){
                 if(sc.next().equals("q"))
                     return null;
-
                 System.out.println("probléme d'identification");
-
             }
-
         }
         return null;
     }
@@ -45,12 +41,11 @@ public class Ihm {
     public boolean quitOuInscription(){
         System.out.print("s'inscrire [1] | quitter [q]");
         while(sc.hasNext()){
-            if(sc.hasNextInt()){
-                if(sc.nextInt()==1)
-                return true;
+            String res = sc.next();
+            if(res.equals("1")){
+                    return true;
             }
-
-            if(sc.next().equals("q"))
+            if(res.equals("q"))
                 return false;
             System.out.println("probléme de saisie");
         }
