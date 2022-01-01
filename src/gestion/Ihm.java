@@ -1,6 +1,5 @@
 package gestion;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Ihm {
@@ -51,13 +50,11 @@ public class Ihm {
                 "votre identifiant\n" +
                 "[q] pour quitter\n" +
                 "Identifiant: ");
-        while(sc.hasNext()){
-            String choix = sc.next();
-            if(choix.equals("q"))
-                return 0;
-            return Integer.parseInt(choix);
-        }
-        return 0;
+
+        String choix = sc.next();
+        if(choix.equals("q"))
+            return 0;
+        return Integer.parseInt(choix);
     }
 
 

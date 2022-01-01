@@ -32,15 +32,6 @@ public class Table implements Comparable<Table>, Serializable {
 
 
     /**
-     * Donne le numéro de la table
-     * @return le numéro de la table
-     */
-    public int getNumTable() {
-        return numTable;
-    }
-
-
-    /**
      * Ajouter l'individu dans la liste des participants sur la table
      * @param pers individu qu'on ajoute dans la liste
      * @param placeOccupe nombre de place réservé par l'individu

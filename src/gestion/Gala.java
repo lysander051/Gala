@@ -3,7 +3,6 @@ package gestion;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -140,7 +139,6 @@ public class Gala implements Serializable {
         return switch (individuListe.get(id).typeIndividu()) {
             case PERSONNEL -> personnelInscrit.containsKey(id);
             case ETUDIANT -> etudiantInscrit.containsKey(id);
-            default -> throw new NumberFormatException();
         };
     }
 
@@ -251,10 +249,8 @@ public class Gala implements Serializable {
      * @return Un texte sur le plan des tables du personnel
      */
     public String tablePersonnel() {
-        String s = "\n-----------------------------------------------------\n" +
-                "Table du personnel: \n";
-        s += table(0, 10);
-        return s;
+        return "\n-----------------------------------------------------\n" +
+                "Table du personnel: \n" + table(0, 10);
     }
 
 
@@ -263,10 +259,8 @@ public class Gala implements Serializable {
      * @return  Un texte sur le plan des tables des étudiants
      */
     public String tableEtudiant() {
-        String s = "\n-----------------------------------------------------\n" +
-                "Table des étudiants: \n";
-        s += table(10, 25);
-        return s;
+        return "\n-----------------------------------------------------\n" +
+                "Table des étudiants: \n"+ table(10, 25);
     }
 
 

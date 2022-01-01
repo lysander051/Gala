@@ -161,12 +161,8 @@ public class Controleur {
         }
         else {
             switch (pers.typeIndividu()) {
-                case PERSONNEL -> {
-                    gererPlacePersonnel();
-                }
-                case ETUDIANT -> {
-                    gererPlaceEtudiant();
-                }
+                case PERSONNEL -> gererPlacePersonnel();
+                case ETUDIANT -> gererPlaceEtudiant();
                 default -> throw new IllegalArgumentException("Type inexistant");
             }
         }

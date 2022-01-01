@@ -1,8 +1,6 @@
 package gestion;
 
 import java.io.Serializable;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 
 public class Etudiant extends Individu implements Serializable {
     private int anneeFormation;
