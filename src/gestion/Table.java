@@ -47,7 +47,6 @@ public class Table implements Comparable<Table>, Serializable {
      */
     public void ajoutPersonne(Individu pers,int placeOccupe){
         participants.add(pers);
-        System.out.println("PARTICIPANTS   "  +participants);
         setPlaceLibre(placeOccupe);
     }
 

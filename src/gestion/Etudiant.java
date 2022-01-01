@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
-public class Etudiant extends Individu implements Serializable, Comparator<Etudiant> {
+public class Etudiant extends Individu implements Serializable {
     private int anneeFormation;
 
 
@@ -40,29 +40,4 @@ public class Etudiant extends Individu implements Serializable, Comparator<Etudi
     public int getAnneeFormation() {
         return anneeFormation;
     }
-
-    @Override
-    public int compare(Etudiant o1, Etudiant o2) {
-        if(o1.getAnneeFormation()==5 && o2.getAnneeFormation()==5){
-            return 0;
-        }
-        else if(o1.getAnneeFormation()==5 ){
-            return -1;
-        }
-        else if(o2.getAnneeFormation()==5){
-            return 1;
-        }
-        else{
-            return -1;
-        }
-    }
-
-
-    /*
-    NON UTILISE
-    @Override
-    public int getType() {
-        return 1;
-    }*/
-
 }

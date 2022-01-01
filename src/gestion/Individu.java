@@ -46,7 +46,8 @@ public  abstract class Individu implements Comparable<Individu>, Serializable {
         if(reservation==null){
             return 0;
         }
-        return reservation.getNbPlace();}
+        return reservation.getNbPlace();
+    }
 
 
     /**
@@ -128,11 +129,4 @@ public  abstract class Individu implements Comparable<Individu>, Serializable {
 
 
     public abstract Type typeIndividu();
-
-    /*
-    NON UTILISE
-    public abstract int getType();
-
-
-    public int getIdentifiant() { return identifiant; }*/
 }

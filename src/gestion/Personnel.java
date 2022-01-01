@@ -1,7 +1,6 @@
 package gestion;
 
 import java.io.Serializable;
-import java.time.temporal.ChronoUnit;
 
 public class Personnel extends Individu implements Serializable {
     /**
@@ -16,7 +15,6 @@ public class Personnel extends Individu implements Serializable {
         super( identifiant,nom, prenom, numTel, eMail);
     }
 
-
     /**
      * Donne le type Personnel
      * @return le type Personnel
@@ -25,11 +23,4 @@ public class Personnel extends Individu implements Serializable {
     public Type typeIndividu() {
         return Type.PERSONNEL;
     }
-
-   /*
-   NON UTILISE
-   @Override
-    public int getType() {
-        return 0;
-    }*/
 }

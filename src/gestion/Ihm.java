@@ -21,7 +21,11 @@ public class Ihm {
      * @return le type de l'individu
      */
     public Type etudiantOuPersonnel() {
-        System.out.print("Si vous êtes du personnel [0] | Si vous êtes un etudiant [1] | quitter [q]");
+        System.out.print("êtes vous du personnel ou un employé? \n" +
+                "[0] Personnel \n" +
+                "[1] Etudiant \n" +
+                "[q] quitter \n" +
+                "Choix:");
         while (sc.hasNext()) {
             String choix = sc.next();
             if (choix.equals("0"))
@@ -42,7 +46,11 @@ public class Ihm {
      * @return le numero de l'utilisateur
      */
     public int demanderNumero(){
-        System.out.print("Veuillez entrer votre identifiant | pour quitter [q]");
+        System.out.print("\n-----------------------------------------------------\n" +
+                "Identification:\n" +
+                "votre identifiant\n" +
+                "[q] pour quitter\n" +
+                "Identifiant: ");
         while(sc.hasNext()){
             String choix = sc.next();
             if(choix.equals("q"))
@@ -58,7 +66,11 @@ public class Ihm {
      * @return true si l'utilisatuer veut s'inscrire false sinon
      */
     public boolean quitOuInscription(){
-        System.out.print("s'inscrire [1] | quitter [q]");
+        System.out.print("\n-----------------------------------------------------\n" +
+                "Inscription:\n" +
+                "[1] S'inscrire\n" +
+                "[q] Quitter\n" +
+                "Inscription: ");
         while(sc.hasNext()){
             String res = sc.next();
             if(res.equals("1")){
@@ -66,7 +78,7 @@ public class Ihm {
             }
             if(res.equals("q"))
                 return false;
-            System.out.println("probléme de saisie");
+            System.out.println("problème de saisie");
         }
         return false;
     }
@@ -78,30 +90,25 @@ public class Ihm {
      * @param sup boolean qui marque si l'utilisateur est en attente de confirmation ou pas
      * @return le choix du menu
      */
-    public int choixMenu(boolean sup){
-        int c=-1;
-        String res="";
-        String s="Menu\n1 – Gérer les places du dîner \n2 – Se désinscrire \n3 – Quitter\n";
+    public String choixMenu(boolean sup){
+        System.out.print("\n-----------------------------------------------------\n" +
+                "Menu principal:\n" +
+                "[1] Se désinscrire\n" +
+                "[2] Gérer les places du dîner\n");
         if(sup){
-            s+="4-Confirmation réservation\n";
+            System.out.println("[3] Confirmation réservation");
         }
-        s+="Votre choix :";
-        System.out.print(s);
+        System.out.println("[q] Quitter\n" +
+                "Quel menu: ");
         while(sc.hasNext()){
-                res=sc.next();
-                if(res.equals("1") || res.equals("2") ) {
-                    break;
-                }
-                if(res.equals("3")){
-                    c=-1;
-                    break;
-                }
-                if(sup && res.equals("4")){
-                    break;
-                }
-            System.out.println(s);
+            String choix=sc.next();
+            if(choix.equals("1") || choix.equals("2") || choix.equals("q"))
+                return choix;
+            if(sup && choix.equals("3"))
+                return choix;
+            System.out.println("problème de saisie");
         }
-        return Integer.parseInt(res);
+        return "q";
     }
 
 
@@ -129,22 +136,16 @@ public class Ihm {
 
 
     /**
-     * Affiche le nombre de place que l'utilisateur peut demander
-     * @param autorise le nombre de place que l'utilisateur peut demander
-     */
-    public void affichageNbPlacePossible(int autorise){
-        System.out.println("Vous avez droit à "+autorise+" places");
-    }
-
-
-    /**
      * Demande à l'utilisateur s'il veut visionner le plan de table
      * @return true si l'utilisateur veut visionner le plan de table, false sinon
      */
     public boolean OuiOuNonPlanTable(){
-        System.out.print("Voulez vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
+        System.out.print("\n-----------------------------------------------------\n" +
+                "Voulez vous consulter le plan des tables?\n" +
+                "[1] Oui \n" +
+                "[2] Non\n" +
+                "Votre choix: ");
         while(sc.hasNext()){
-
             String res = sc.next();
             if(res.equals("1")){
                 return true;
@@ -152,7 +153,7 @@ public class Ihm {
             if(res.equals("2")) {
                 return false;
             }
-            System.out.print("1- Oui \n 2- Non\nVotre choix :");
+            System.out.print("Problème de saisie");
         }
         return false;
     }
@@ -165,27 +166,24 @@ public class Ihm {
      * @return le numéro de la table choisi par l'utilisateur
      */
     public int demandeTable(String table,Type t){
-        String s=table;
+        System.out.print(table);
         if(t==Type.PERSONNEL){
-            s+="Choisissez entre les tables 1 - 10";
+            System.out.println("Choisissez entre les tables [1-10]\n");
         }
         else{
-            s+="Choisissez entre les tables 11 - 25";
+            System.out.println("Choisissez entre les tables [11-25]\n");
         }
-        int choix=-1;
-        System.out.print(s+"\nVotre choix :");
+        System.out.print("Votre choix: ");
         while (sc.hasNext()) {
-            String res=sc.next();
-            if(res.matches("[0-9][0-9]")) {
-                choix = Integer.parseInt(res);
+            int choix=sc.nextInt();
                 if ((t==Type.ETUDIANT && choix>=11 && choix<=25) || (t==Type.PERSONNEL && choix>=1 && choix<=10)){
-                    break;
+                    return choix;
                 }
-            }
-            System.out.print("Erreur, votre choix :");
+            System.out.print("Problème de saisie");
         }
-        return choix;
+        return -1;
     }
+
 
 
     /**
@@ -195,17 +193,18 @@ public class Ihm {
      */
     public int demandeNbPlace(int autorise){
         int choix=-1;
-        System.out.print("Vous avez droit jusqu'à " + autorise + " places " + "\nVotre choix :");
+        System.out.print("\n-----------------------------------------------------\n" +
+                "Vous avez droit jusqu'à " + autorise + " places " + "\n" +
+                "Nombre de place: ");
         while (sc.hasNext()) {
             String res=sc.next();
-
                 if(res.matches("[0-9]")) {
                     choix = Integer.parseInt(res);
                     if (choix > 0 && choix <= autorise) {
                         break;
                     }
                 }
-            System.out.print("Erreur, votre choix :");
+            System.out.print("Problème de saisie");
             }
         return choix;
     }
@@ -238,52 +237,4 @@ public class Ihm {
     public void afficheErreur(String s){
         System.out.println(s);
     }
-
-
-
-
-
-
-
-   /* public LocalDate dateAujourdhui(){
-        System.out.print("Date d'aujourd'hui :");
-        System.out.println("Saisissez une date (JJ/MM/AAAA) :");
-
-        String str = sc.nextLine();
-        if(str.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")){
-            SimpleDateFormat f = new SimpleDateFormat("MM-dd-yyyy");
-            Date date = f.parse(sDate);
-        }
-        else {
-            System.out.println("Erreur format");
-        }
-        sc.
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                int choix = sc.nextInt();
-                if(choix==0)
-                    return Type.PERSONNEL;
-                if(choix==1)
-                    return Type.ETUDIANT;
-
-                System.out.println("probléme d'identification");
-            }
-            if (sc.hasNext()){
-                if(sc.next().equals("q"))
-                    return null;
-
-                System.out.println("probléme d'identification");
-
-            }
-
-        }
-        return null;
-    }*/
-
-
-
-
-
-
-
 }

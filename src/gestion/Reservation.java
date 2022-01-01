@@ -37,16 +37,7 @@ public class Reservation implements Serializable {
     /** Donne le nombre de place réservé
      * @return le nombre de place réservé
      */
-    public int getNbPlace() {
-        return nbPlace;
-    }
-
-
-    /*    ON NE SAIT PAS SI ON L'UTILISE OU PAS/**
-     * Donne la date de la réservation
-     * @return la date de la réservation
-     */
-   /* public LocalDate getDateReservation(){ return dateReservation; }*/
+    public int getNbPlace() {return nbPlace;}
 
 
     /**
@@ -67,8 +58,4 @@ public class Reservation implements Serializable {
                 ", montant=" + montant +
                 '}';
     }
-
-
-
-
 }

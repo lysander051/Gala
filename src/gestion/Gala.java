@@ -151,7 +151,6 @@ public class Gala implements Serializable {
      * @return true si l'individu peux s'inscrire et false sinon
      */
     public boolean inscription(int id) {
-        //TODO verifier si le get ne retourne rien, si cela fonctionne
         if (individuListe.get(id) == null) {
             throw new IllegalArgumentException("ID INEXISTANT");
         }
@@ -168,7 +167,6 @@ public class Gala implements Serializable {
             case ETUDIANT -> {
                 if (estPresent(individuListe.get(id).typeIndividu(), id)) {
                     etudiantInscrit.put(id, (Etudiant) individuListe.get(id));
-                    System.out.println(etudiantInscrit);
                     return true;
                 } else {
                     return false;
@@ -253,7 +251,8 @@ public class Gala implements Serializable {
      * @return Un texte sur le plan des tables du personnel
      */
     public String tablePersonnel() {
-        String s = "Table du personnel: \n";
+        String s = "\n-----------------------------------------------------\n" +
+                "Table du personnel: \n";
         s += table(0, 10);
         return s;
     }
@@ -264,7 +263,8 @@ public class Gala implements Serializable {
      * @return  Un texte sur le plan des tables des étudiants
      */
     public String tableEtudiant() {
-        String s = "Table des étudiants: \n";
+        String s = "\n-----------------------------------------------------\n" +
+                "Table des étudiants: \n";
         s += table(10, 25);
         return s;
     }
@@ -341,7 +341,6 @@ public class Gala implements Serializable {
             pers.setReservation(new Reservation(date, numTable, nbPlace, tarifPrincipale(id), TARIF3));
             Table t = tables.get(numTable - 1);
             t.ajoutPersonne(pers, nbPlace);
-            System.out.println(pers);
             return true;
         } else {
             throw new IllegalArgumentException("Il n'y a pas assez de place sur la table " + numTable + " pour votre demande");
