@@ -19,6 +19,5 @@ public class ComparateurAnnee implements Serializable,Comparator<Etudiant> {
         else{
             return -1;
         }
-
     }
 }
