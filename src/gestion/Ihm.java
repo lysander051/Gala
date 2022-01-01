@@ -50,11 +50,13 @@ public class Ihm {
                 "votre identifiant\n" +
                 "[q] pour quitter\n" +
                 "Identifiant: ");
-
-        String choix = sc.next();
-        if(choix.equals("q"))
-            return 0;
-        return Integer.parseInt(choix);
+        while(sc.hasNext()){
+            String choix = sc.next();
+            if(choix.equals("q"))
+                return 0;
+            return Integer.parseInt(choix);
+        }
+        return 0;
     }
 
 
