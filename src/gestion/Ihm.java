@@ -30,7 +30,7 @@ public class Ihm {
                 return Type.ETUDIANT;
             if (choix.equals("q"))
                 return null;
-            System.out.println("probléme d'identification");
+            System.out.println("problème d'identification");
         }
         return null;
     }
@@ -66,7 +66,7 @@ public class Ihm {
             }
             if(res.equals("q"))
                 return false;
-            System.out.println("probléme de saisie");
+            System.out.println("problème de saisie");
         }
         return false;
     }
@@ -142,7 +142,7 @@ public class Ihm {
      * @return true si l'utilisateur veut visionner le plan de table, false sinon
      */
     public boolean OuiOuNonPlanTable(){
-        System.out.print("Voulez vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
+        System.out.print("Voulez-vous consulter le plan des tables?\n 1- Oui \n 2- Non\nVotre choix :");
         while(sc.hasNext()){
 
             String res = sc.next();
