@@ -1,11 +1,12 @@
 package gestion;
-
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Main {
     public static void main(String[] args) {
-        Gala g = new Gala(LocalDate.now());
-        Ihm i = new Ihm();
-        Controleur c = new Controleur(g, i, LocalDate.of(2022, 1, 10));
+	    new Controleur(LocalDate.now());
+
+
     }
 }
