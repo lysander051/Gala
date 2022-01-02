@@ -28,9 +28,9 @@ public class Controleur {
             }
             else {
                 this.gala = (Gala)stockage.charger();
-                miseAJourEtudiant(LocalDate.of(2021,11,30),date);
-                ihm.etatGala(gala.toString());
+                miseAJourEtudiant(LocalDate.now(),date);
             }
+            ihm.etatGala(gala.toString());
         }
         catch (Exception e){
             ihm.afficheErreur(e.getMessage());
@@ -103,23 +103,26 @@ public class Controleur {
      * renvoie vers le choix de l'individu
      */
     private void Menu(){
-        int menu= ihm.choixMenu(gala.attenteConfirmation(idIndividu));
-        if(menu==1){
-            // gerer place
-            gererPlace();
-        }
-        if(menu==2){
+        String menu= ihm.choixMenu(gala.attenteConfirmation(idIndividu));
+        if(menu.equals("1")){
             // se desinscrire
             try{
-                gala.desinscription(idIndividu,LocalDate.of(2021,11,30));
+                gala.desinscription(idIndividu,LocalDate.now());
                 stockage.enregistrer(gala);
-                System.exit(0);
             }
             catch (Exception e){
                 ihm.afficheErreur(e.getMessage());
             }
         }
-        if(menu==-1){
+        if(menu.equals("2")){
+            // gerer place
+            gererPlace();
+        }
+        if(menu.equals("3")){
+            // confirmer la reservation de l'etudiant
+            confirmationEtudiant();
+        }
+        if(menu.equals("q")){
             //quitter
             try{
                 stockage.enregistrer(gala);
@@ -128,10 +131,6 @@ public class Controleur {
             catch (Exception e){
                 ihm.afficheErreur(e.getMessage());
             }
-        }
-        if(menu==4){
-            // confirmer la reservation de l'etudiant
-            confirmationEtudiant();
         }
     }
 
@@ -161,16 +160,9 @@ public class Controleur {
             }
         }
         else {
-            ihm.affichageNbPlacePossible((gala.nbPlaceAutoriseIndividu(idIndividu)));
             switch (pers.typeIndividu()) {
-                case PERSONNEL -> {
-                    gererPlacePersonnel();
-
-                }
-                case ETUDIANT -> {
-                    gererPlaceEtudiant();
-
-                }
+                case PERSONNEL -> gererPlacePersonnel();
+                case ETUDIANT -> gererPlaceEtudiant();
                 default -> throw new IllegalArgumentException("Type inexistant");
             }
         }
@@ -208,7 +200,6 @@ public class Controleur {
             ihm.afficheMontant(gala.montantReservationGala(idIndividu),place );
         } catch (Exception e) {
             ihm.afficheErreur(e.getMessage());
-            Menu();
         }
     }
 
