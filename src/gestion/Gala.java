@@ -354,7 +354,7 @@ public class Gala implements Serializable {
     /**
      * On enregistre l'étudiant dans la liste d'attente
      * On ajoute l'étudiant dans la liste d'attente
-     * On enregistre la demande de la l'étudiant avec le nombre de place souhaité
+     * On enregistre la demande de l'étudiant avec le nombre de place souhaité
      * @param num le numéro d'identifiant de l'étudiant
      * @param  nbPlace le nombre de place souhaité par l'étudiant
      */
@@ -367,7 +367,7 @@ public class Gala implements Serializable {
 
 
     /**
-     * Donne le nombre de place reservé aux  étudiants à la soirée
+     * Donne le nombre de place reservé aux étudiants à la soirée
      * * @return le nombre total des étudiants et de ses accompagnants pouvant venir à la soirée
      */
     public int getNbTotalEtudiant() {
@@ -409,7 +409,7 @@ public class Gala implements Serializable {
     /**
      * Met à jour les demandes de réservations acceptées
      * Si les places sont suffisants, on accepte la demande de réservation de l'étudiant qui est au sommet de la queue
-     * Si le nombre de place demandé par l'étudiant au sommet est supérieur au nombre de place restant, on regarde la demande l'étudiant suivant
+     * Si le nombre de place demandé par l'étudiant au sommet est supérieur au nombre de place restant, on regarde la demande de l'étudiant suivant
      * Quand on accepte la demande de réservation de l'étudiant : on l'ajoute dans la liste des étudiants acceptés et on attend sa confirmation
      */
     public void updateReservation() {
@@ -452,7 +452,7 @@ public class Gala implements Serializable {
 
     /**
      * Pour savoir si l'individu dont l'id est passé en paramètre est en attente de confirmation de sa réservation
-     * Si c'est un étudiant dont la demande vient d'être acceptée,il est en attente de confirmation ; tout les autres ne sont pas concernés
+     * Si c'est un étudiant dont la demande vient d'être acceptée,il est en attente de confirmation ; tous les autres ne sont pas concernés
      * @param id le numéro d'indentification de l'individu
      * @return true si la demande de l'étudiant a été accepté et on attend la confirmation de sa réservation, false sinon
      */
@@ -466,7 +466,7 @@ public class Gala implements Serializable {
             case ETUDIANT -> {
                 return i.getNbReservation() == 0 && etudiantAccepte.contains((Etudiant) i);
             }
-            default -> throw new IllegalArgumentException("Id non existante");
+            default -> throw new IllegalArgumentException("Id non existant");
         }
     }
 

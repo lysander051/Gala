@@ -33,7 +33,7 @@ public class Ihm {
                 return Type.ETUDIANT;
             if (choix.equals("q"))
                 return null;
-            System.out.println("probléme d'identification");
+            System.out.println("problème d'identification");
         }
         return null;
     }

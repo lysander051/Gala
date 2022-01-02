@@ -73,7 +73,7 @@ public class Controleur {
             }
             if (gala.estPresent(type, id))
                 break;
-            System.out.println("le numéro d'identification n'éxiste pas");
+            System.out.println("le numéro d'identification n'existe pas");
         }
         idIndividu=id;
         this.inscription();
