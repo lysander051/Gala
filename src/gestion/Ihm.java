@@ -33,7 +33,7 @@ public class Ihm {
                 return Type.ETUDIANT;
             if (choix.equals("q"))
                 return null;
-            System.out.println("problème d'identification");
+            System.out.print("problème d'identification ");
         }
         return null;
     }
@@ -77,7 +77,7 @@ public class Ihm {
             }
             if(res.equals("q"))
                 return false;
-            System.out.println("problème de saisie");
+            System.out.print("problème de saisie ");
         }
         return false;
     }
@@ -105,7 +105,7 @@ public class Ihm {
                 return choix;
             if(sup && choix.equals("3"))
                 return choix;
-            System.out.println("problème de saisie");
+            System.out.print("problème de saisie  ");
         }
         return "q";
     }
@@ -152,7 +152,7 @@ public class Ihm {
             if(res.equals("2")) {
                 return false;
             }
-            System.out.print("Problème de saisie");
+            System.out.print("Problème de saisie ");
         }
         return false;
     }
@@ -178,7 +178,7 @@ public class Ihm {
                 if ((t==Type.ETUDIANT && choix>=11 && choix<=25) || (t==Type.PERSONNEL && choix>=1 && choix<=10)){
                     return choix;
                 }
-            System.out.print("Problème de saisie");
+            System.out.print("Problème de saisie ");
         }
         return -1;
     }
@@ -203,7 +203,7 @@ public class Ihm {
                         break;
                     }
                 }
-            System.out.print("Problème de saisie");
+            System.out.print("Problème de saisie  ");
             }
         return choix;
     }

@@ -98,6 +98,10 @@ public class Table implements Comparable<Table>, Serializable {
     }
 
 
+    /**
+     * @param o l'objet avec lequel on compare
+     * @return true si ils ont le même numéro de table false sinon
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,11 +110,19 @@ public class Table implements Comparable<Table>, Serializable {
         return numTable == table.numTable;
     }
 
+    /**
+     * Hachage de code
+     * @return hachage selon le numéro de table
+     */
     @Override
     public int hashCode() {
         return Objects.hash(numTable);
     }
 
+    /**
+     * Donne des renseignements sur le nombre de place restant, et la liste des personnes sur la table
+     * @return un texte sur l'état d'une table
+     */
     @Override
     public String toString() {
         String s = "("+placeLibre+" places restants) [";
@@ -127,7 +139,7 @@ public class Table implements Comparable<Table>, Serializable {
             s+=sep+participants.get(i).toString()+acc;
             sep=",";
         }
-        return s + "]";
+        return s + "] \n";
     }
 
 

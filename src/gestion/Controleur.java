@@ -27,7 +27,9 @@ public class Controleur {
                 stockage.enregistrer(gala);
             }
             else {
+
                 this.gala = (Gala)stockage.charger();
+                this.gala.setDateGala(date);
                 miseAJourEtudiant(LocalDate.now(),date);
             }
             ihm.etatGala(gala.toString());
@@ -69,11 +71,11 @@ public class Controleur {
                     System.exit(0);
                 }
             }catch(NumberFormatException e){
-                System.out.println("Le numéro ne comporte que des chiffres");
+                ihm.afficheErreur("Le numéro ne comporte que des chiffres");
             }
             if (gala.estPresent(type, id))
                 break;
-            System.out.println("le numéro d'identification n'existe pas");
+           ihm.afficheErreur("le numéro d'identification n'existe pas");
         }
         idIndividu=id;
         this.inscription();
@@ -200,6 +202,8 @@ public class Controleur {
             ihm.afficheMontant(gala.montantReservationGala(idIndividu),place );
         } catch (Exception e) {
             ihm.afficheErreur(e.getMessage());
+            Menu();
+
         }
     }
 

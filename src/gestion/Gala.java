@@ -108,6 +108,14 @@ public class Gala implements Serializable {
 
 
     /**
+     * Changer la date de gala
+     * @param dateGala nouvelle date d'un gala
+     */
+    public void setDateGala(LocalDate dateGala) {
+        this.dateGala = dateGala;
+    }
+
+    /**
      * Donne l'individu correspondant à l'id
      * @param id le numero d'identification de l'individu
      * @return l'individu dont le numéro d'indentification est passé en paramètre
@@ -156,7 +164,6 @@ public class Gala implements Serializable {
             case PERSONNEL -> {
                 if (estPresent(individuListe.get(id).typeIndividu(), id)) {
                     personnelInscrit.put(id, (Personnel) individuListe.get(id));
-                    System.out.println(personnelInscrit);
                     return true;
                 } else {
                     return false;
@@ -362,7 +369,6 @@ public class Gala implements Serializable {
         Etudiant e = (Etudiant) getPersonne(num);
         etudiantAttente.add(e);
         demandeEtudiant.put(e, nbPlace);
-        System.out.println(etudiantAttente);
     }
 
 
@@ -371,8 +377,9 @@ public class Gala implements Serializable {
      * * @return le nombre total des étudiants et de ses accompagnants pouvant venir à la soirée
      */
     public int getNbTotalEtudiant() {
+        // 8 est le nombre de place de chaque table
         return TABLE_ETUDIANT * 8;
-        // ON DOIT MODIFIER LE 8
+
     }
 
 
@@ -391,7 +398,6 @@ public class Gala implements Serializable {
                 nb+=demandeEtudiant.get(e);
             }
         }
-        System.out.println("place accepté"+nb);
         return nb;
     }
 
@@ -402,7 +408,6 @@ public class Gala implements Serializable {
      */
     public int getNbPlaceAcceptationRestant() {
         return getNbTotalEtudiant() - getNbEtudiantAccepte();
-        //return 5-getNbEtudiantAccepte();  POUR FAIRE UN EXEMPLE
     }
 
 
@@ -415,16 +420,13 @@ public class Gala implements Serializable {
     public void updateReservation() {
         Set<Etudiant> rajouter = new HashSet<>();
         int restant=getNbPlaceAcceptationRestant() ;
-
         int nbPlace;
         while (restant> 0) {
-            System.out.println("restant "+restant);
             Etudiant sommet= etudiantAttente.poll();
             if (sommet == null) {
                 break;
             }
             nbPlace = demandeEtudiant.get(sommet);
-            System.out.println(sommet.getNom()+"  nb place "+nbPlace);
             if (restant >= nbPlace) {
                 etudiantAccepte.add(sommet);
             } else {
@@ -500,22 +502,18 @@ public class Gala implements Serializable {
      * @return true si la désinscription s'est bien passé
      */
     public boolean desinscription(int id, LocalDate date) {
+        System.out.println(dateGala);
         if (ChronoUnit.DAYS.between(date, dateGala) >= 10) {
             Individu ind = getPersonne(id);
             annulationReservation(id);
             switch (ind.typeIndividu()) {
-                case PERSONNEL -> {
+                case PERSONNEL ->
                     personnelInscrit.remove(id);
-                    System.out.println(personnelInscrit.containsKey(id) + " " + ind);
-
-                }
                 case ETUDIANT -> {
                     etudiantAccepte.remove((Etudiant)ind);
                     demandeEtudiant.remove((Etudiant)ind);
                     etudiantAttente.remove((Etudiant)ind);
                     etudiantInscrit.remove(id);
-                    System.out.println(etudiantAccepte.contains(ind) + " " + demandeEtudiant.containsKey(ind) + " " + etudiantAttente.contains(ind) + " " + etudiantInscrit.containsKey(id) + " " + ind);
-
                 }
                 default -> throw new NumberFormatException();
             }

@@ -123,9 +123,18 @@ public  abstract class Individu implements Comparable<Individu>, Serializable {
     public int compareTo(Individu o) {return this.identifiant-o.identifiant;}
 
 
+    /**
+     * Le toString d'un individu
+     * @return le nom et le prenom de l'individu
+     */
     @Override
-    public String toString() {return  nom+" "+prenom+" "+reservation;}
+    public String toString() {
+        return nom+" "+prenom+" ";}
 
 
+    /**
+     *  Renvoie le type del'individu
+     * @return le type de l'individu
+     */
     public abstract Type typeIndividu();
 }

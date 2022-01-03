@@ -49,13 +49,13 @@ public class Reservation implements Serializable {
     }
 
 
+    /**
+     * ToString d'une réservation
+     * @return  un texte contenant la date, le numéro de table, le nombre de place et le montant de la réservation
+     */
     @Override
     public String toString() {
-        return "Reservation{" +
-                "date=" + dateReservation +
-                ", numTable=" + numTable +
-                ", nbPlace=" + nbPlace +
-                ", montant=" + montant +
-                '}';
+        return  dateReservation +" à la table" +numTable + "pour" +nbPlace + "montant :"+montant;
+
     }
 }
