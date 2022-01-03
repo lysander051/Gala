@@ -502,7 +502,6 @@ public class Gala implements Serializable {
      * @return true si la désinscription s'est bien passé
      */
     public boolean desinscription(int id, LocalDate date) {
-        System.out.println(dateGala);
         if (ChronoUnit.DAYS.between(date, dateGala) >= 10) {
             Individu ind = getPersonne(id);
             annulationReservation(id);
